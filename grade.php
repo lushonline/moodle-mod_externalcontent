@@ -22,28 +22,18 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+require('../../config.php');
 
-require_once("../../config.php");
+// Course_module ID.
+$id = required_param('id', PARAM_INT);
 
-$id = required_param('id', PARAM_INT); // Course module ID.
-
-if (! $cm = get_coursemodule_from_id('externalcontent', $id)) {
+if (!$cm = get_coursemodule_from_id('externalcontent', $id)) {
     print_error('invalidcoursemodule');
 }
+$externalcontent = $DB->get_record('externalcontent', array('id' => $cm->instance), '*', MUST_EXIST);
+$course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 
-if (! $scorm = $DB->get_record('externalcontent', array('id' => $cm->instance))) {
-    print_error('invalidcoursemodule');
-}
+require_course_login($course, true, $cm);
+$context = context_module::instance($cm->id);
 
-if (! $course = $DB->get_record('course', array('id' => $externalcontent->course))) {
-    print_error('coursemisconf');
-}
-
-require_login($course, false, $cm);
-
-if (has_capability('mod/externalcontent:viewreports', context_module::instance($cm->id))) {
-    redirect('report.php?id='.$cm->id);
-} else {
-    redirect('view.php?id='.$cm->id);
-}
+redirect(new moodle_url('/mod/externalcontent/view.php', array('id' => $cm->id)));
