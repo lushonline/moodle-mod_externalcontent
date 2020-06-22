@@ -37,6 +37,9 @@ env:
   - DB=mysqli MOODLE_BRANCH=MOODLE_39_STABLE NODE_VERSION=14.2.0
   - DB=mysqli MOODLE_BRANCH=master NODE_VERSION=14.2.0
 
+  jobs:
+    fast_finish: true
+
 before_install:
   - phpenv config-rm xdebug.ini
   - cd ../..
