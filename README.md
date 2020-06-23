@@ -5,9 +5,26 @@ The module enables a teacher to create a resource using the text editor.
 
 The resource can display text, images, sound, video and web links.
 
+External content activities and Single Activity courses can be bulk loaded and updated using [moodle-tool_uploadexternalcontent](https://github.com/lushonline/moodle-tool_uploadexternalcontent)
+
 Advantages of using the External content module rather than the standard page module is
 that optionally if the content has links to an external site that records a completion status
 the completion can then be imported using [moodle-tool_uploadexternalcontentresults](https://github.com/lushonline/moodle-tool_uploadexternalcontentresults)
+
+- [Installation](#installation)
+
+## Installation
+
+---
+1. Install the External content activity module:
+
+   ```sh
+   git clone https://github.com/lushonline/moodle-mod_externalcontent.git mod/externalcontent
+   ```
+
+   Or install via the Moodle plugin directory:
+
+   https://moodle.org/plugins/mod_externalcontent
 
 ## License ##
 
