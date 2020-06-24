@@ -257,7 +257,7 @@ function mod_externalcontent_core_calendar_provide_event_action(calendar_event $
  * "extra" information that may be needed when printing
  * this activity in a course listing.
  *
- * See {@link get_array_of_activities()} in course/lib.php
+ * See get_array_of_activities() in course/lib.php
  *
  * @param stdClass $coursemodule
  * @return cached_cm_info Info to customise main page display
