@@ -72,7 +72,7 @@ class activity extends \core_search\base_activity {
         $doc->set('description1', content_to_text($record->intro, $record->introformat));
 
         // Not compulsory, but speeds up things when the search area includes files (see [[#Indexing files]]).
-        if (isset($options['lastindexedtime']) && ($options['lastindexedtime'] < $record->created)) {
+        if (isset($options['lastindexedtime']) && ($options['lastindexedtime'] < $record->timecreated)) {
             // If the document was created after the last index time, it must be new.
             $doc->set_is_new(true);
         }
