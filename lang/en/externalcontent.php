@@ -49,6 +49,7 @@ $string['optionsheader'] = 'Display options';
 $string['externalcontent-mod-externalcontent-x'] = 'Any External content module page';
 $string['externalcontent:addinstance'] = 'Add a new External content resource';
 $string['externalcontent:view'] = 'View External content content';
+$string['externalcontent:viewreports'] = 'View External content reports';
 $string['pluginadministration'] = 'External content module administration';
 $string['printheading'] = 'Display External content name';
 $string['printheadingexplain'] = 'Display External content name above content?';
