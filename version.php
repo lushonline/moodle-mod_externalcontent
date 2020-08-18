@@ -24,8 +24,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2020081300;
-$plugin->requires = 2018051700; // Requires this Moodle version v3.5 see https://docs.moodle.org/dev/Releases.
+$plugin->version = 2020080100;
+$plugin->requires = 2016120500; // Requires this Moodle version v3.2 see https://docs.moodle.org/dev/Releases.
 $plugin->component = 'mod_externalcontent';
 $plugin->maturity = MATURITY_STABLE;
-$plugin->release = '1.5';
+$plugin->release = '1.1';
