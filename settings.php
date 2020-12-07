@@ -35,4 +35,22 @@ if ($ADMIN->fulltree) {
         get_string('printintro', 'externalcontent'), get_string('printintroexplain', 'externalcontent'), 0));
     $settings->add(new admin_setting_configcheckbox('externalcontent/printlastmodified',
         get_string('printlastmodified', 'externalcontent'), get_string('printlastmodifiedexplain', 'externalcontent'), 1));
+
+    $settings->add(new admin_setting_heading('externalcontent/xapisetting',
+        get_string('xapisetting', 'externalcontent'), ''));
+
+    $settings->add(new admin_setting_configcheckbox('externalcontent/xapienable',
+        get_string('xapienable', 'externalcontent'), get_string('xapienableexplain', 'externalcontent'), 1));
+
+    $settings->add(new admin_setting_configtext('externalcontent/xapiusername',
+        get_string('xapiusername', 'externalcontent'), get_string('xapiusernameexplain', 'externalcontent'),
+        get_config('externalcontent', 'xapidefaultusername')));
+
+        $settings->add(new admin_setting_configtext('externalcontent/xapipassword',
+        get_string('xapipassword', 'externalcontent'), get_string('xapipasswordexplain', 'externalcontent'),
+        get_config('externalcontent', 'xapidefaultpassword')));
+
+    $settings->add(new admin_setting_configtext('externalcontent/xapicompletionverbs',
+        get_string('xapicompletionverbs', 'externalcontent'), get_string('xapicompletionverbsexplain', 'externalcontent'),
+        'http://adlnet.gov/expapi/verbs/completed,http://adlnet.gov/expapi/verbs/passed'));
 }

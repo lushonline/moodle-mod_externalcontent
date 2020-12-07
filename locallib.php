@@ -27,6 +27,41 @@ defined('MOODLE_INTERNAL') || die();
 require_once("$CFG->dirroot/mod/externalcontent/lib.php");
 require_once("$CFG->libdir/resourcelib.php");
 
+
+/**
+ * This function checks if an xapi password has been generated for this site.
+ *
+ * If the key does not exist it generates a new one. If the openssl
+ * extension is not installed or configured properly it returns a random string.
+ *
+ * @return void;
+ */
+function externalcontent_set_randomlrscredentials() {
+    $username = get_config('externalcontent', 'xapidefaultusername');
+
+    // If we already generated a valid key, no need to check.
+    if (empty($username)) {
+        $randomusername = substr(
+                            str_shuffle(
+                                str_repeat('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil(24 / 62))
+                            ), 1, 24
+                        );
+        set_config('xapidefaultusername', $randomusername, 'externalcontent');
+    }
+
+    $password = get_config('externalcontent', 'xapidefaultpassword');
+
+    // If we already generated a valid key, no need to check.
+    if (empty($password)) {
+        $randompassword = substr(
+                            str_shuffle(
+                                str_repeat('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil(24 / 62))
+                            ), 1, 24
+                        );
+        set_config('xapidefaultpassword', $randompassword, 'externalcontent');
+    }
+}
+
 /**
  * Helper method to get the editor options easily.
  *

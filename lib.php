@@ -406,7 +406,7 @@ function externalcontent_get_tracks($externalcontentid, $userid = 0) {
  * @param int $completed Set to completed status (default=1)
  * @return object statsus=bool if change processed. completionupdated=bool. scoreupdated=bool. message=A response message
  */
-function externalcontent_update_completion_state($course, $cm, $context = null, $userid = 0, $score = null, $completed = 1) {
+function externalcontent_update_completion_state($course, $cm, $context = null, $userid = 0, $score = null, $completed = 1, $xapi=0) {
     global $DB, $USER;
 
     if (empty($userid)) {
@@ -437,7 +437,7 @@ function externalcontent_update_completion_state($course, $cm, $context = null, 
 
     // Update completion state.
     $completion = new completion_info($course);
-    if (isloggedin() && !isguestuser() && $completion->is_enabled($cm)) {
+    if ((isloggedin() || $xapi) && !isguestuser() && $completion->is_enabled($cm)) {
         $currentstate = $completion->get_data($cm, false, $userid, null);
 
         if ($currentstate->viewed == COMPLETION_VIEWED) {

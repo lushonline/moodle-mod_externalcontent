@@ -1,0 +1,7 @@
+{
+    "require": {
+        "slim/slim": "^3.0",
+        "rusticisoftware/tincan": "@stable",
+        "tuupola/slim-basic-auth": "^3.3"
+    }
+}

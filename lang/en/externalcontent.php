@@ -60,6 +60,16 @@ $string['printlastmodifiedexplain'] = 'Display last modified date below content?
 $string['privacy:metadata'] = 'The External content resource plugin does not store any personal data.';
 $string['search:activity'] = 'External content';
 
+$string['xapisetting'] = 'Default xAPI settings';
+$string['xapienable'] = 'Enable xAPI LRS basic support';
+$string['xapienableexplain'] = 'External Content items can be marked viewed and completed by an xAPI statement.';
+$string['xapicompletionverbs'] = 'List of completion xAPI verbs';
+$string['xapicompletionverbsexplain'] = 'This is a comma delimited list of xAPI verbs that when received will mark the content as completed externally.';
+$string['xapiusername'] = 'xAPI LRS Username';
+$string['xapiusernameexplain'] = 'The username for the xAPI functionality.';
+$string['xapipassword'] = 'xAPI LRS Password';
+$string['xapipasswordexplain'] = 'The password for the xAPI functionality.';
+
 $string['report'] = 'External content report';
 $string['summary'] = 'Summary';
 

@@ -1,6 +1,4 @@
-# External Content with Completion #
-[![Build Status](https://travis-ci.org/lushonline/moodle-mod_externalcontent.svg?branch=master)](https://travis-ci.org/lushonline/moodle-mod_externalcontent)
-
+# External Content with Completion (EXPERIMENTAL BRANCH)
 The module enables a teacher to create a resource using the text editor.
 
 The resource can display text, images, sound, video and web links.
@@ -16,17 +14,40 @@ the completion can then be imported using [moodle-tool_uploadexternalcontentresu
 ## Installation
 
 ---
-1. Install the External content activity module:
+
+1. Install the External content activity module experimental branch:
 
    ```sh
-   git clone https://github.com/lushonline/moodle-mod_externalcontent.git mod/externalcontent
+   git clone --branch experimental https://github.com/lushonline/moodle-mod_externalcontent.git mod/externalcontent
    ```
 
-   Or install via the Moodle plugin directory:
+## Configuring xAPI Realtime Tracking (Experimental)
 
-   https://moodle.org/plugins/mod_externalcontent
+The experimental xAPI Realtime Tracking implements basic LRS Statement API functionality.
 
-## License ##
+Primarily:
+
+* [Statements Resource](https://github.com/adlnet/xAPI-Spec/blob/master/xAPI-Communication.md#stmtres) - This is WRITE ONLY and so supports POST, PUT only. GET requests return a 401 Status
+* [About Resource](https://github.com/adlnet/xAPI-Spec/blob/master/xAPI-Communication.md#aboutresource) - GET
+
+The statements received are parsed, and used to set the viewed status, completion status and score for the content if available.
+
+---
+
+1. Configure the username/password which are used for basic authentication of the basic LRS endpoint. The defaults are random strings setup when module is installed.
+2. Set the xAPI verbs that will be used to indicate the content has been "completed", if a verb that matches one of these values is received the completed externally flag is updated. Any other verb simply sets the viewed flag.
+
+Configure your external content provider to connect to the "basic" LRS implemented here:
+
+- LRS - https://{moodlehostname}/mod/externalcontent/lrs/index.php
+- Authentication - Basic Authentication using the username/password you configure
+
+For the tracking to work:
+
+- Statement Object ID and the Moodle Course ID Numbers must match
+- Statement Actor must use the account [Inverse Functional Identifiers](https://github.com/adlnet/xAPI-Spec/blob/master/xAPI-Data.md#inversefunctional) and the name must match the Moodle Username.
+
+## License
 
 2019-2020 LushOnline
 
@@ -37,10 +58,11 @@ version.
 
 This program is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with
-this program.  If not, see <http://www.gnu.org/licenses/>.
+this program. If not, see <http://www.gnu.org/licenses/>.
 
 ## Acknowledgements
+
 This was inspired in part by the great work of [Petr Skoda](http://skodak.org) on the core [mod\page](https://github.com/moodle/moodle/tree/master/mod/page)

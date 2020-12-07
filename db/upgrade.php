@@ -51,6 +51,8 @@ defined('MOODLE_INTERNAL') || die;
  * @return boolean
  */
 function xmldb_externalcontent_upgrade($oldversion) {
-    // Put any upgrade step following this.
+    global $CFG;
+    require_once($CFG->dirroot . '/mod/externalcontent/locallib.php');
+    externalcontent_set_randomlrscredentials();
     return true;
 }
