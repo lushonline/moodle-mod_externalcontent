@@ -32,15 +32,37 @@ use Psr\Container\ContainerInterface;
 use TinCan\Statement;
 use TinCan\Agent;
 
+/**
+ * Class containing controllers for statements
+ *
+ * @package   tool_uploadexternalcontent
+ * @copyright 2019-2020 LushOnline
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class StatementController
 {
     protected $container;
+
+    /**
+     * __construct
+     *
+     * @param  mixed $container
+     * @return void
+     */
     public function __construct(ContainerInterface $container) {
         $this->container = $container;
         $cfg = get_config('externalcontent');
         $this->enabled = $cfg->xapienable;
     }
 
+    /**
+     * poststatement
+     *
+     * @param  mixed $request
+     * @param  mixed $response
+     * @param  mixed $args
+     * @return void
+     */
     public function poststatement(Request $request, Response $response, array $args) {
         if (!$this->enabled) {
             return $response
@@ -101,6 +123,14 @@ class StatementController
         return $response->withJson($debug ? $payloads : $statementids);
     }
 
+    /**
+     * notimplemented
+     *
+     * @param  mixed $request
+     * @param  mixed $response
+     * @param  mixed $args
+     * @return void
+     */
     public function notimplemented(Request $request, Response $response, array $args) {
         $message = 'Credentials invalid for this endpoint.';
         if (!$this->enabled) {

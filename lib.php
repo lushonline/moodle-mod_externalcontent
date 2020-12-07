@@ -404,6 +404,7 @@ function externalcontent_get_tracks($externalcontentid, $userid = 0) {
  * @param int $userid Set to 0 for current user (default)
  * @param int $score Set to score (default=NULL)
  * @param int $completed Set to completed status (default=1)
+ * @param int $xapi Support anonymous updates from xapi, without user needing to be logged in (default=0)
  * @return object statsus=bool if change processed. completionupdated=bool. scoreupdated=bool. message=A response message
  */
 function externalcontent_update_completion_state($course, $cm, $context = null, $userid = 0, $score = null, $completed = 1, $xapi=0) {

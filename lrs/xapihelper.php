@@ -43,39 +43,46 @@ use TinCan\Agent;
  */
 class xapihelper {
 
-  public static function processstatement(String $xapiversion, Statement $statement) {
-    $cfg = get_config('externalcontent');
-    $completionverbs = array_map('trim',explode(',', $cfg->xapicompletionverbs));
+    /**
+     * Process an xAPI statement to create payload for sending to externalcontent_update_completion_state
+     *
+     * @param  mixed $xapiversion
+     * @param  mixed $statement
+     * @return void
+     */
+    public static function processstatement(String $xapiversion, Statement $statement) {
+        $cfg = get_config('externalcontent');
+        $completionverbs = array_map('trim', explode(',', $cfg->xapicompletionverbs));
 
-    $payload = new \stdClass;
-    $payload->version = $xapiversion;
-    $payload->statementId = $statement->getId();
-    $payload->verb = $statement->getVerb()->getId();
-    $payload->object = $statement->getObject()->getId();
+        $payload = new \stdClass;
+        $payload->version = $xapiversion;
+        $payload->statementId = $statement->getId();
+        $payload->verb = $statement->getVerb()->getId();
+        $payload->object = $statement->getObject()->getId();
 
-    $actor = $statement->getActor();
-    $agent = $actor instanceof Agent ? $actor->getAccount() : null;
-    $payload->actor = $agent != null ? $agent->getName() : null;
+        $actor = $statement->getActor();
+        $agent = $actor instanceof Agent ? $actor->getAccount() : null;
+        $payload->actor = $agent != null ? $agent->getName() : null;
 
-    $result = $statement->getResult();
-    $payload->completion = $result != null ? $result->getCompletion() : null;
+        $result = $statement->getResult();
+        $payload->completion = $result != null ? $result->getCompletion() : null;
 
-    $payload->completed = false;
-    if (in_array($payload->verb, $completionverbs)) {
-        $payload->completed = true;
+        $payload->completed = false;
+        if (in_array($payload->verb, $completionverbs)) {
+            $payload->completed = true;
+        }
+
+        $score = $result != null ? $result->getScore() : null;
+        $payload->score = $score != null ? $score->getRaw() : null;
+
+        $payload->course = self::get_course_by_idnumber($payload->object);
+        $payload->user = self::get_user_by_username($payload->actor);
+        $payload->cm = $payload->course ? self::get_coursemodule_from_course_idnumber($payload->course) : null;
+
+        $payload->updateresponse = self::mark_completed($payload);
+
+        return $payload;
     }
-
-    $score = $result != null ? $result->getScore() : null;
-    $payload->score = $score != null ? $score->getRaw() : null;
-
-    $payload->course = self::get_course_by_idnumber($payload->object);
-    $payload->user = self::get_user_by_username($payload->actor);
-    $payload->cm = $payload->course ? self::get_coursemodule_from_course_idnumber($payload->course) : null;
-
-    $payload->updateresponse = self::mark_completed($payload);
-
-    return $payload;
-}
 
 
     /**
@@ -84,14 +91,14 @@ class xapihelper {
      * @return object role or null
      */
     public static function get_student_role() {
-      global $DB;
+        global $DB;
 
-      if ($role = $DB->get_record('role', array('shortname' => 'student'))) {
-          return $role;
-      } else {
-          return null;
-      }
-  }
+        if ($role = $DB->get_record('role', array('shortname' => 'student'))) {
+            return $role;
+        } else {
+            return null;
+        }
+    }
 
     /**
      * Retrieve a user by username.
@@ -100,16 +107,16 @@ class xapihelper {
      * @return object user or null
      */
     public static function get_user_by_username($username) {
-      global $DB;
+        global $DB;
 
-      $params = array('username' => $username);
+        $params = array('username' => $username);
 
-      if ($user = $DB->get_record('user', $params, 'id,username')) {
-          return $user;
-      } else {
-          return null;
-      }
-  }
+        if ($user = $DB->get_record('user', $params, 'id,username')) {
+            return $user;
+        } else {
+            return null;
+        }
+    }
 
     /**
      * Retrieve a externalcontent by its id.
@@ -199,10 +206,10 @@ class xapihelper {
                     $response->message = "Course module does not exist.";
                 }
             } else {
-                $response->message=  "User does not exist.";
+                $response->message =  "User does not exist.";
             }
         } else {
-            $response->message= "Course does not exist.";
+            $response->message = "Course does not exist.";
         }
         return $response;
     }
