@@ -19,12 +19,10 @@ cache:
 
 env:
   global:
-
+    - IGNORE_PATHS=lrs/vendor
 jobs:
   fast_finish: true
   include:
-    - php: 7.2
-      env: DB=pgsql MOODLE_BRANCH=MOODLE_34_STABLE
     - php: 7.2
       env: DB=pgsql MOODLE_BRANCH=MOODLE_35_STABLE
     - php: 7.2
@@ -37,8 +35,6 @@ jobs:
       env: DB=pgsql MOODLE_BRANCH=MOODLE_39_STABLE
     - php: 7.2
       env: DB=pgsql MOODLE_BRANCH=MOODLE_310_STABLE
-    - php: 7.2
-      env: DB=mysqli MOODLE_BRANCH=MOODLE_34_STABLE
     - php: 7.2
       env: DB=mysqli MOODLE_BRANCH=MOODLE_35_STABLE
     - php: 7.2
