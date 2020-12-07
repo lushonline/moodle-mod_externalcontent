@@ -206,7 +206,7 @@ class xapihelper {
                     $response->message = "Course module does not exist.";
                 }
             } else {
-                $response->message =  "User does not exist.";
+                $response->message = "User does not exist.";
             }
         } else {
             $response->message = "Course does not exist.";
