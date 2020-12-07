@@ -58,12 +58,12 @@ class AboutController
     }
 
     /**
-     * Proecess the about request
+     * Process the about request
      *
      * @param mixed $request object that represents the current HTTP request.
      * @param mixed $response object that represents the current HTTP response.
-     * @param mixed $args  associative array that contains values for the current route’s named placeholders.
-     * @return void
+     * @param mixed $args associative array that contains values for the current route’s named placeholders.
+     * @return object the response object
      */
     public function about(Request $request, Response $response, array $args) {
         $message = 'Credentials invalid for this endpoint.';

@@ -35,23 +35,18 @@ use TinCan\Agent;
 /**
  * Class containing controllers for statements
  *
- * @package   mod_externalcontent
+ * @package   tool_uploadexternalcontent
  * @copyright 2019-2020 LushOnline
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class StatementController
 {
-    /**
-     * container
-     *
-     * @var mixed
-     */
     protected $container;
 
     /**
      * __construct
      *
-     * @param  mixed $container ContainerInterface instance passed by Slim
+     * @param  mixed $container
      * @return void
      */
     public function __construct(ContainerInterface $container) {
@@ -61,12 +56,12 @@ class StatementController
     }
 
     /**
-     * Receive and deserialize xAPI statements sent as POST or PUT
+     * Process inbound xAPI statements
      *
      * @param mixed $request object that represents the current HTTP request.
      * @param mixed $response object that represents the current HTTP response.
-     * @param mixed $args  associative array that contains values for the current route’s named placeholders.
-     * @return void
+     * @param mixed $args associative array that contains values for the current route’s named placeholders.
+     * @return object the response object
      */
     public function poststatement(Request $request, Response $response, array $args) {
         if (!$this->enabled) {
@@ -129,12 +124,12 @@ class StatementController
     }
 
     /**
-     * Respond with a 401 status for querying of xAPI statements
+     * Send a 401 unauthorised response for anyresource paths we havent implemented
      *
      * @param mixed $request object that represents the current HTTP request.
      * @param mixed $response object that represents the current HTTP response.
-     * @param mixed $args  associative array that contains values for the current route’s named placeholders.
-     * @return void
+     * @param mixed $args associative array that contains values for the current route’s named placeholders.
+     * @return object the response object
      */
     public function notimplemented(Request $request, Response $response, array $args) {
         $message = 'Credentials invalid for this endpoint.';
