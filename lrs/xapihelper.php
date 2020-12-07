@@ -46,8 +46,8 @@ class xapihelper {
     /**
      * Process an xAPI statement to create payload for sending to externalcontent_update_completion_state
      *
-     * @param  mixed $xapiversion
-     * @param  mixed $statement
+     * @param  mixed $xapiversion The xAPI version of the statement
+     * @param  mixed $statement A single xAPI statement
      * @return void
      */
     public static function processstatement(String $xapiversion, Statement $statement) {

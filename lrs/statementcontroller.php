@@ -35,18 +35,23 @@ use TinCan\Agent;
 /**
  * Class containing controllers for statements
  *
- * @package   tool_uploadexternalcontent
+ * @package   mod_externalcontent
  * @copyright 2019-2020 LushOnline
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class StatementController
 {
+    /**
+     * container
+     *
+     * @var mixed
+     */
     protected $container;
 
     /**
      * __construct
      *
-     * @param  mixed $container
+     * @param  mixed $container ContainerInterface instance passed by Slim
      * @return void
      */
     public function __construct(ContainerInterface $container) {
@@ -56,11 +61,11 @@ class StatementController
     }
 
     /**
-     * poststatement
+     * Receive and deserialize xAPI statements sent as POST or PUT
      *
-     * @param  mixed $request
-     * @param  mixed $response
-     * @param  mixed $args
+     * @param mixed $request object that represents the current HTTP request.
+     * @param mixed $response object that represents the current HTTP response.
+     * @param mixed $args  associative array that contains values for the current route’s named placeholders.
      * @return void
      */
     public function poststatement(Request $request, Response $response, array $args) {
@@ -124,11 +129,11 @@ class StatementController
     }
 
     /**
-     * notimplemented
+     * Respond with a 401 status for querying of xAPI statements
      *
-     * @param  mixed $request
-     * @param  mixed $response
-     * @param  mixed $args
+     * @param mixed $request object that represents the current HTTP request.
+     * @param mixed $response object that represents the current HTTP response.
+     * @param mixed $args  associative array that contains values for the current route’s named placeholders.
      * @return void
      */
     public function notimplemented(Request $request, Response $response, array $args) {

@@ -32,18 +32,23 @@ use Psr\Container\ContainerInterface;
 /**
  * Class containing controllers for about
  *
- * @package   tool_uploadexternalcontent
+ * @package   mod_externalcontent
  * @copyright 2019-2020 LushOnline
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class AboutController
 {
+    /**
+     * container
+     *
+     * @var mixed
+     */
     protected $container;
 
     /**
      * __construct
      *
-     * @param  mixed $container
+     * @param mixed $container ContainerInterface instance passed by Slim
      * @return void
      */
     public function __construct(ContainerInterface $container) {
@@ -55,9 +60,9 @@ class AboutController
     /**
      * Proecess the about request
      *
-     * @param  mixed $request
-     * @param  mixed $response
-     * @param  mixed $args
+     * @param mixed $request object that represents the current HTTP request.
+     * @param mixed $response object that represents the current HTTP response.
+     * @param mixed $args  associative array that contains values for the current route’s named placeholders.
      * @return void
      */
     public function about(Request $request, Response $response, array $args) {
