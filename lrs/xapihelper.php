@@ -201,7 +201,7 @@ class xapihelper {
                     enrol_try_internal_enrol($record->course->id, $record->user->id, $studentrole->id);
 
                     $response = externalcontent_update_completion_state($record->course, $record->cm, null, $record->user->id,
-                                                                              $record->score, $record->completed, true);
+                                                                              $record->score, $record->completed, 1, 1);
                 } else {
                     $response->message = "Course module does not exist.";
                 }
