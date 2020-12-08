@@ -5,51 +5,62 @@ os: linux
 dist: xenial
 
 addons:
-  firefox: "47.0.1"
   postgresql: "9.6"
 
 services:
   - mysql
   - postgresql
+  - docker
 
 cache:
   directories:
     - $HOME/.composer/cache
     - $HOME/.npm
 
-php:
- - 7.2
-
 env:
- global:
-
- jobs:
-  - DB=pgsql MOODLE_BRANCH=MOODLE_35_STABLE NODE_VERSION=14.2.0
-  - DB=pgsql MOODLE_BRANCH=MOODLE_36_STABLE NODE_VERSION=8.9.0
-  - DB=pgsql MOODLE_BRANCH=MOODLE_37_STABLE NODE_VERSION=14.2.0
-  - DB=pgsql MOODLE_BRANCH=MOODLE_38_STABLE NODE_VERSION=14.2.0
-  - DB=pgsql MOODLE_BRANCH=MOODLE_39_STABLE NODE_VERSION=14.2.0
-  - DB=pgsql MOODLE_BRANCH=master NODE_VERSION=14.2.0
-  - DB=mysqli MOODLE_BRANCH=MOODLE_35_STABLE NODE_VERSION=14.2.0
-  - DB=mysqli MOODLE_BRANCH=MOODLE_36_STABLE NODE_VERSION=8.9.0
-  - DB=mysqli MOODLE_BRANCH=MOODLE_37_STABLE NODE_VERSION=14.2.0
-  - DB=mysqli MOODLE_BRANCH=MOODLE_38_STABLE NODE_VERSION=14.2.0
-  - DB=mysqli MOODLE_BRANCH=MOODLE_39_STABLE NODE_VERSION=14.2.0
-  - DB=mysqli MOODLE_BRANCH=master NODE_VERSION=14.2.0
-
+  global:
+    - IGNORE_PATHS=lrs/vendor
 jobs:
   fast_finish: true
+  include:
+    - php: 7.2
+      env: DB=pgsql MOODLE_BRANCH=MOODLE_35_STABLE
+    - php: 7.2
+      env: DB=pgsql MOODLE_BRANCH=MOODLE_36_STABLE
+    - php: 7.2
+      env: DB=pgsql MOODLE_BRANCH=MOODLE_37_STABLE
+    - php: 7.2
+      env: DB=pgsql MOODLE_BRANCH=MOODLE_38_STABLE
+    - php: 7.2
+      env: DB=pgsql MOODLE_BRANCH=MOODLE_39_STABLE
+    - php: 7.2
+      env: DB=pgsql MOODLE_BRANCH=MOODLE_310_STABLE
+    - php: 7.2
+      env: DB=mysqli MOODLE_BRANCH=MOODLE_35_STABLE
+    - php: 7.2
+      env: DB=mysqli MOODLE_BRANCH=MOODLE_36_STABLE
+    - php: 7.2
+      env: DB=mysqli MOODLE_BRANCH=MOODLE_37_STABLE
+    - php: 7.2
+      env: DB=mysqli MOODLE_BRANCH=MOODLE_38_STABLE
+    - php: 7.2
+      env: DB=mysqli MOODLE_BRANCH=MOODLE_39_STABLE
+    - php: 7.2
+      env: DB=mysqli MOODLE_BRANCH=MOODLE_310_STABLE
 
 before_install:
+  - export MOODLE_VERSION=$(echo "$MOODLE_BRANCH" | cut -d'_' -f 2)
   - phpenv config-rm xdebug.ini
+  - if [ "$MOODLE_VERSION" = 36 ] || [ "$MOODLE_VERSION" -le 34 ]; then NVMVERSION=8.9; else NVMVERSION=14.15.0; fi
+  - nvm install $NVMVERSION;
+  - nvm use $NVMVERSION;
   - cd ../..
-  - nvm install $NODE_VERSION
-  - nvm use $NODE_VERSION
-  - composer create-project -n --no-dev --prefer-dist blackboard-open-source/moodle-plugin-ci ci ^2
+  - composer selfupdate
+  - composer create-project -n --no-dev --prefer-dist moodlehq/moodle-plugin-ci ci ^3
   - export PATH="$(cd ci/bin; pwd):$(cd ci/vendor/bin; pwd):$PATH"
 
 install:
-  - moodle-plugin-ci install
+  - moodle-plugin-ci install -vvv
 
 script:
   - moodle-plugin-ci phplint

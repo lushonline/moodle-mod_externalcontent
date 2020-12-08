@@ -315,9 +315,10 @@ function externalcontent_get_completion_state($course, $cm, $userid, $type) {
  * @param  int $userid Set to 0 for current user (default=0)
  * @param  int $completed Set to 1 for completed (default=1)
  * @param  int $score Set to score (default=NULL)
+ * @param  int $usebestscore Set to 1 to update score only if it is higher than current score (default=0)
  * @return bool True if succesful, false if not.
  */
-function externalcontent_add_track($externalcontentid, $userid = 0, $completed = 1, $score = null) {
+function externalcontent_add_track($externalcontentid, $userid = 0, $completed = 1, $score = null, $usebestscore=0) {
     global $DB, $USER;
 
     if (empty($userid)) {
@@ -337,7 +338,11 @@ function externalcontent_add_track($externalcontentid, $userid = 0, $completed =
                 '*',
                 IGNORE_MISSING)) {
         $track->completed = $completed;
-        $track->score = $score;
+
+        // Only update score if new score > old score
+        $bestscore = $track->score > $score ? $track->score : $score;
+
+        $track->score = $usebestscore ? $bestscore : $score;
         return $DB->update_record('externalcontent_track', $track);
     } else {
         return $DB->insert_record('externalcontent_track', $record, false);
@@ -404,9 +409,12 @@ function externalcontent_get_tracks($externalcontentid, $userid = 0) {
  * @param int $userid Set to 0 for current user (default)
  * @param int $score Set to score (default=NULL)
  * @param int $completed Set to completed status (default=1)
+ * @param int $xapi Support anonymous updates from xapi, without user needing to be logged in (default=0)
+ * @param int $usebestscore Set to 1 to update score only if it is higher than current score (default=0)
  * @return object statsus=bool if change processed. completionupdated=bool. scoreupdated=bool. message=A response message
  */
-function externalcontent_update_completion_state($course, $cm, $context = null, $userid = 0, $score = null, $completed = 1) {
+function externalcontent_update_completion_state($course, $cm, $context = null, $userid = 0, $score = null,
+                                                 $completed = 1, $xapi=0, $usebestscore=0) {
     global $DB, $USER;
 
     if (empty($userid)) {
@@ -433,11 +441,11 @@ function externalcontent_update_completion_state($course, $cm, $context = null, 
     }
 
     // Add the tracking data.
-    externalcontent_add_track($externalcontent->id, $userid, $completed, $score);
+    externalcontent_add_track($externalcontent->id, $userid, $completed, $score, $usebestscore);
 
     // Update completion state.
     $completion = new completion_info($course);
-    if (isloggedin() && !isguestuser() && $completion->is_enabled($cm)) {
+    if ((isloggedin() || $xapi) && !isguestuser() && $completion->is_enabled($cm)) {
         $currentstate = $completion->get_data($cm, false, $userid, null);
 
         if ($currentstate->viewed == COMPLETION_VIEWED) {
