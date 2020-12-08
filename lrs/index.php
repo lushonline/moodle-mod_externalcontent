@@ -51,7 +51,7 @@ $app->add(function ($req, $res, $next) {
     return $response
         ->withHeader('X-Experience-API-Version', '1.0.0')
         ->withHeader('Access-Control-Allow-Origin', '*')
-        ->withHeader('Access-Control-Allow-Headers', 
+        ->withHeader('Access-Control-Allow-Headers',
                      'X-Requested-With, Content-Type, Accept, Origin, Authorization, X-Experience-API-Version')
         ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
 });
