@@ -41,15 +41,15 @@ class AboutController
     /**
      * container
      *
-     * @var mixed
+     * @var ContainerInterface ContainerInterface instance passed by Slim
      */
-    protected $container;
+    protected ContainerInterface $container;
 
     /**
      * __construct
      *
-     * @param mixed $container ContainerInterface instance passed by Slim
-     * @return void
+     * @param ContainerInterface $container ContainerInterface instance passed by Slim
+     * @return self
      */
     public function __construct(ContainerInterface $container) {
         $this->container = $container;
@@ -60,9 +60,9 @@ class AboutController
     /**
      * Process the about request
      *
-     * @param mixed $request object that represents the current HTTP request.
-     * @param mixed $response object that represents the current HTTP response.
-     * @param mixed $args associative array that contains values for the current route’s named placeholders.
+     * @param Request $request object that represents the current HTTP request.
+     * @param Response $response object that represents the current HTTP response.
+     * @param mixed[] $args associative array that contains values for the current route’s named placeholders.
      * @return object the response object
      */
     public function about(Request $request, Response $response, array $args) {

@@ -35,19 +35,24 @@ use TinCan\Agent;
 /**
  * Class containing controllers for statements
  *
- * @package   tool_uploadexternalcontent
+ * @package   mod_externalcontent
  * @copyright 2019-2020 LushOnline
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class StatementController
 {
-    protected $container;
+    /**
+     * container
+     *
+     * @var ContainerInterface ContainerInterface instance passed by Slim
+     */
+    protected ContainerInterface $container;
 
     /**
      * __construct
      *
-     * @param  mixed $container
-     * @return void
+     * @param ContainerInterface $container
+     * @return self
      */
     public function __construct(ContainerInterface $container) {
         $this->container = $container;
@@ -58,8 +63,8 @@ class StatementController
     /**
      * Process inbound xAPI statements
      *
-     * @param mixed $request object that represents the current HTTP request.
-     * @param mixed $response object that represents the current HTTP response.
+     * @param Request $request object that represents the current HTTP request.
+     * @param Response $response object that represents the current HTTP response.
      * @param mixed $args associative array that contains values for the current route’s named placeholders.
      * @return object the response object
      */
@@ -126,9 +131,9 @@ class StatementController
     /**
      * Send a 401 unauthorised response for anyresource paths we havent implemented
      *
-     * @param mixed $request object that represents the current HTTP request.
-     * @param mixed $response object that represents the current HTTP response.
-     * @param mixed $args associative array that contains values for the current route’s named placeholders.
+     * @param Request $request object that represents the current HTTP request.
+     * @param Response $response object that represents the current HTTP response.
+     * @param mixed[] $args associative array that contains values for the current route’s named placeholders.
      * @return object the response object
      */
     public function notimplemented(Request $request, Response $response, array $args) {
