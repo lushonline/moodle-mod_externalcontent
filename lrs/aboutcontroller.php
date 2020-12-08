@@ -43,7 +43,7 @@ class AboutController
      *
      * @var ContainerInterface ContainerInterface instance passed by Slim
      */
-    protected ContainerInterface $container;
+    protected $container;
 
     /**
      * __construct

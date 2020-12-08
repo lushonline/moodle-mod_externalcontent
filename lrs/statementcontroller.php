@@ -44,9 +44,9 @@ class StatementController
     /**
      * container
      *
-     * @var ContainerInterface ContainerInterface instance passed by Slim
+     * @var ContainerInterface instance passed by Slim
      */
-    protected ContainerInterface $container;
+    protected $container;
 
     /**
      * __construct
