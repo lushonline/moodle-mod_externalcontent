@@ -84,7 +84,7 @@ class StatementController
         if ($isjson) {
             $body = $request->getBody();
         } else {
-            // Get the json from the multipart/mixed
+            // Get the json from the multipart/mixed.
             $matches = array();
             preg_match('/boundary=([^"]+)/i', $contenttype, $matches);
             list(, $boundary) = $matches;
@@ -118,7 +118,8 @@ class StatementController
         }
 
         foreach ($statements as $statement) {
-            $payload = xapihelper::processstatement($xapiversion ? $xapiversion : '1.0.0', new Statement(json_decode(json_encode($statement), true)));
+            $payload = xapihelper::processstatement($xapiversion ? $xapiversion : '1.0.0',
+                                                    new Statement(json_decode(json_encode($statement), true)));
             if ($debug) {
                 array_push($payloads, $payload);
             }
