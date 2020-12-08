@@ -65,7 +65,7 @@ class StatementController
      *
      * @param Request $request object that represents the current HTTP request.
      * @param Response $response object that represents the current HTTP response.
-     * @param mixed $args associative array that contains values for the current route’s named placeholders.
+     * @param mixed[] $args associative array that contains values for the current route’s named placeholders.
      * @return object the response object
      */
     public function poststatement(Request $request, Response $response, array $args) {
