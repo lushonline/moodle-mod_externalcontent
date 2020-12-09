@@ -1,3 +1,8 @@
+# blocklist builds of tags
+branches:
+  except:
+    - /^v\d{10}?$/
+
 language: php
 
 os: linux
