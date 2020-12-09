@@ -1,9 +1,16 @@
 # External Content with Completion #
-[![Build Status](https://travis-ci.org/lushonline/moodle-mod_externalcontent.svg?branch=master)](https://travis-ci.org/lushonline/moodle-mod_externalcontent)
+[![Build Status](https://travis-ci.org/lushonline/moodle-mod_externalcontent.svg?branch=moodle33)](https://travis-ci.org/lushonline/moodle-mod_externalcontent)
 
 The module enables a teacher to create a resource using the text editor.
 
 The resource can display text, images, sound, video and web links.
+
+There are two versions depending on the Moodle version used:
+
+|BRANCH         |MOODLE VERSIONS|
+|---------------|---------------|
+|[moodle33](https://github.com/lushonline/moodle-mod_externalcontent/tree/moodle33)|v3.2 - v3.4|
+|[master](https://github.com/lushonline/moodle-mod_externalcontent/)|v3.5 - v3.10|
 
 External content activities and Single Activity courses can be bulk loaded and updated using [moodle-tool_uploadexternalcontent](https://github.com/lushonline/moodle-tool_uploadexternalcontent)
 

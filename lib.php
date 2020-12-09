@@ -115,11 +115,6 @@ function externalcontent_add_instance($moduleinstance, $mform = null) {
     }
 
     externalcontent_grade_item_update($moduleinstance);
-
-    $completiontimeexp = !empty($moduleinstance->completionexpected) ? $moduleinstance->completionexpected : null;
-    \core_completion\api::update_completion_date_event($cmid, 'externalcontent',
-                                                        $moduleinstance->id, $completiontimeexp);
-
     return $moduleinstance->id;
 }
 
@@ -161,10 +156,6 @@ function externalcontent_update_instance($moduleinstance) {
 
     externalcontent_grade_item_update($moduleinstance);
     externalcontent_update_grades($moduleinstance);
-
-    $completiontimeexp = !empty($moduleinstance->completionexpected) ? $moduleinstance->completionexpected : null;
-    \core_completion\api::update_completion_date_event($cmid, 'externalcontent', $moduleinstance->id, $completiontimeexp);
-
     return true;
 }
 
@@ -192,7 +183,6 @@ function externalcontent_delete_instance($id) {
     // Note: all context files are deleted automatically.
 
     $cm = get_coursemodule_from_instance('externalcontent', $id);
-    \core_completion\api::update_completion_date_event($cm->id, 'externalcontent', $externalcontent->id, null);
 
     // We must delete the module record after we delete the grade item.
     if (! $DB->delete_records('externalcontent', array('id' => $externalcontent->id))) {
