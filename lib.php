@@ -339,7 +339,7 @@ function externalcontent_add_track($externalcontentid, $userid = 0, $completed =
                 IGNORE_MISSING)) {
         $track->completed = $completed;
 
-        // Only update score if new score > old score
+        // Only update score if new score > old score.
         $bestscore = $track->score > $score ? $track->score : $score;
 
         $track->score = $usebestscore ? $bestscore : $score;
