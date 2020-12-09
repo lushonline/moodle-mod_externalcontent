@@ -1,3 +1,8 @@
+# blocklist builds of tags
+branches:
+  except:
+    - /^v\d{10}?$/
+
 language: php
 
 os: linux
@@ -37,7 +42,7 @@ before_install:
   - nvm install $NVMVERSION;
   - nvm use $NVMVERSION;
   - cd ../..
-  - composer selfupdate 1.10
+  - composer selfupdate --1
   - composer create-project -n --no-dev --prefer-dist moodlehq/moodle-plugin-ci ci ^2
   - export PATH="$(cd ci/bin; pwd):$(cd ci/vendor/bin; pwd):$PATH"
 
