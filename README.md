@@ -1,5 +1,5 @@
 # External Content with Completion #
-[![Build Status](https://travis-ci.org/lushonline/moodle-mod_externalcontent.svg?branch=master)](https://travis-ci.org/lushonline/moodle-mod_externalcontent)
+![Moodle Plugin CI](https://github.com/lushonline/moodle-mod_externalcontent/workflows/Moodle%20Plugin%20CI/badge.svg)
 
 The module enables a teacher to create a resource using the text editor.
 
