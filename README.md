@@ -1,4 +1,6 @@
 # External Content with Completion (EXPERIMENTAL BRANCH)
+![Moodle Plugin CI](https://github.com/lushonline/moodle-mod_externalcontent/workflows/Moodle%20Plugin%20CI/badge.svg?branch=experimental)
+
 The module enables a teacher to create a resource using the text editor.
 
 The resource can display text, images, sound, video and web links.
