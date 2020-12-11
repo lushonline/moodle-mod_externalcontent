@@ -32,17 +32,17 @@ Primarily:
 * [Statements Resource](https://github.com/adlnet/xAPI-Spec/blob/master/xAPI-Communication.md#stmtres) - This is WRITE ONLY and so supports POST, PUT only. GET requests return a 401 Status
 * [About Resource](https://github.com/adlnet/xAPI-Spec/blob/master/xAPI-Communication.md#aboutresource) - GET
 
-The statements received are parsed, and used to set the viewed status, completion status and score for the content if available.
+The JSON statements received are parsed using [TinCan PHP](https://github.com/RusticiSoftware/TinCanPHP), and used to set the viewed status, completion status and score for the content if available.
 
 ---
 
 1. Configure the username/password which are used for basic authentication of the basic LRS endpoint. The defaults are random strings setup when module is installed.
-2. Set the xAPI verbs that will be used to indicate the content has been "completed", if a verb that matches one of these values is received the completed externally flag is updated. Any other verb simply sets the viewed flag.
+2. Set the xAPI verbs that will be used to indicate the content has been "completed", if a verb that matches one of these values is received the completed externally flag is updated. Any other verb simply sets the viewed flag. The defaults are http://adlnet.gov/expapi/verbs/completed and http://adlnet.gov/expapi/verbs/passed
 
 Configure your external content provider to connect to the "basic" LRS implemented here:
 
 - LRS - https://{moodlehostname}/mod/externalcontent/lrs/index.php
-- Authentication - Basic Authentication using the username/password you configure
+- Authentication - Basic Authentication using the username/password you configured
 
 For the tracking to work:
 
