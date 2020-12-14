@@ -58,7 +58,7 @@ $app->add(function ($req, $res, $next) {
 
 $app->post('/statements', '\StatementController:poststatement');
 $app->put('/statements', '\StatementController:poststatement');
-$app->get('/statements', '\StatementController:notimplemented');
+$app->get('/statements', '\StatementController:fakegetstatement');
 
 $app->get('/about', '\AboutController:about');
 
