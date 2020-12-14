@@ -8,13 +8,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        moodle-version: ['MOODLE_35_STABLE', 'MOODLE_36_STABLE', 'MOODLE_37_STABLE', 'MOODLE_38_STABLE', 'MOODLE_39_STABLE', 'MOODLE_310_STABLE']
+        moodle-version: ['MOODLE_35_STABLE', 'MOODLE_36_STABLE', 'MOODLE_37_STABLE', 'MOODLE_38_STABLE', 'MOODLE_39_STABLE', 'MOODLE_310_STABLE', 'MOODLE_311_STABLE']
         database: ['pgsql', 'mariadb']
         operating-system: [ubuntu-18.04]
-        php-versions: ['7.2']
+        php-versions: ['7.2','7.3', '7.4']
         node-versions: ['14.15.0']
 
         exclude:
+          - moodle-version: 'MOODLE_35_STABLE'
+            php-versions: '7.3'
+          - moodle-version: 'MOODLE_35_STABLE'
+            php-versions: '7.4'
           - moodle-version: 'MOODLE_36_STABLE'
             node-versions: '14.15.0'
         include:
