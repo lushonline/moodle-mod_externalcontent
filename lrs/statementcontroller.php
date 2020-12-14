@@ -72,14 +72,14 @@ class StatementController
     private static function parseheadercontent($content) {
         $parts = explode(';', $content);
         $options = array();
-        // Parse options
+        // Parse options.
         foreach ($parts as $part) {
             if (false === empty($part)) {
                 $partsplit = explode('=', $part, 2);
                 if (2 === count($partsplit)) {
                     list ($key, $value) = $partsplit;
                     if ('*' === substr($key, -1)) {
-                        // RFC 5987
+                        // RFC 5987.
                         $key = substr($key, 0, -1);
                         if (preg_match(
                             "/(?P<charset>[\w!#$%&+^_`{}~-]+)'(?P<language>[\w-]*)'(?P<value>.*)$/",
@@ -150,9 +150,9 @@ class StatementController
                 $requestsegments = explode($boundary, $rawbody);
                 foreach ($requestsegments as $segment) {
                     if (!empty(trim($segment))) {
-                        $end_headers = strpos($segment, "\r\n\r\n", 4);
-                        $start_content = $end_headers + 4; // $end_headers is before last \r\n\r\n.
-                        $text = substr($segment, $start_content);
+                        $endheaders = strpos($segment, "\r\n\r\n", 4);
+                        $startcontent = $endheaders + 4;
+                        $text = substr($segment, $startcontent);
                         break;
                     }
                 }
@@ -202,7 +202,7 @@ class StatementController
                 ->write('xAPI not enabled.');
         }
 
-        $payload =  new \stdClass;
+        $payload = new \stdClass;
         $payload->statements = array();
         $payload->more = '';
 
