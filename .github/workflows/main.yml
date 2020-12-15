@@ -115,7 +115,7 @@ jobs:
           sudo locale-gen en_AU.UTF-8
 
       - name: Get Postgres Version
-        if: ${{ matrix.database }} == 'pgsql'
+        if: ${{ matrix.database == 'pgsql' }}
         run: |
           psql -c 'SELECT version();' -U 'postgres' -h '127.0.0.1'
 
