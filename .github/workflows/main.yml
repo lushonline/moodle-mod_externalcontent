@@ -97,7 +97,7 @@ jobs:
 
       - name: Determine Composer cache directory
         shell: bash
-        run: "echo \"COMPOSER_CACHE_DIR=$(composer config cache-dir)\" >> $GITHUB_ENV"
+        run: "echo \"COMPOSER_CACHE_DIR=$(composer config cache-dir -d ci)\" >> $GITHUB_ENV"
 
       - name: Cache dependencies installed with Composer
         uses: actions/cache@v2
