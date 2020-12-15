@@ -91,7 +91,7 @@ jobs:
 
       - name: Download moodle-plugin-ci
         run: |
-          composer create-project -n --no-install --no-dev --prefer-dist moodlehq/moodle-plugin-ci ci ^3
+          composer create-project -n --no-install --no-scripts --no-dev --prefer-dist moodlehq/moodle-plugin-ci ci ^3
 
       - name: Determine Composer cache directory
         shell: bash
