@@ -6,7 +6,7 @@ jobs:
       IGNORE_PATHS: lrs/vendor
 
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         moodle-version:
           [
