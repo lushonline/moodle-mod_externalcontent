@@ -107,7 +107,7 @@ jobs:
 
       - name: Install moodle-plugin-ci
         run: |
-          composer install -d ci
+          composer create-project -d ci
           # Add dirs to $PATH
           echo $(cd ci/bin; pwd) >> $GITHUB_PATH
           echo $(cd ci/vendor/bin; pwd) >> $GITHUB_PATH
