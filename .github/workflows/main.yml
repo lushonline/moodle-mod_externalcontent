@@ -82,14 +82,6 @@ jobs:
           nvm install ${{ matrix.node-versions }}
           nvm use ${{ matrix.node-versions }}
           
-      - name: Change node global path
-        run: |
-          # Change node global install path for CI runner
-          mkdir ~/.npm-global
-          npm config set prefix '~/.npm-global'
-          export PATH=~/.npm-global/bin:$PATH
-          source ~/.profile
-      
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
