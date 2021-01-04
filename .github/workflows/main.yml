@@ -92,7 +92,7 @@ jobs:
       
       - name: Configure NVM
         run: |
-          nvm install
+          nvm install ${{ matrix.node-versions }}
           nvm use ${{ matrix.node-versions }}
 
       - name: Setup PHP
