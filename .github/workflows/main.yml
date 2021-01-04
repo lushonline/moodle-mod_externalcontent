@@ -1,5 +1,8 @@
 name: Moodle Plugin CI
 on: push
+defaults:
+  run:
+    shell: bash -l {0}
 jobs:
   moodle-plugin-ci:
     env:
@@ -87,6 +90,11 @@ jobs:
           export PATH=~/.npm-global/bin:$PATH
           source ~/.profile
       
+      - name: Configure NVM
+        run: |
+          nvm install
+          nvm use ${{ matrix.node-versions }}
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
