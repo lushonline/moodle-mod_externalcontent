@@ -23,7 +23,6 @@
  */
 defined('MOODLE_INTERNAL') || die;
 
-require_once('../../../config.php');
 require('./xapihelper.php');
 require('./vendor/autoload.php');
 use Psr\Http\Message\ResponseInterface as Response;
@@ -82,7 +81,7 @@ class StatementController
                         // RFC 5987.
                         $key = substr($key, 0, -1);
                         if (preg_match(
-                            "/(?P<charset>[\w!#$%&+^_`{}~-]+)'(?P<language>[\w-]*)'(?P<value>.*)$/",
+                            "/(?P<charset>[\w!#$%&+^_\u0060{}~-]+)'(?P<language>[\w-]*)'(?P<value>.*)$/",
                             $value,
                             $matches
                         )) {
