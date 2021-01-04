@@ -90,6 +90,7 @@ jobs:
       - name: Get Node Version
         run: |
           node --version
+          node --version > plugin/.nvmrc
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
