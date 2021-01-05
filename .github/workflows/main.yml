@@ -135,6 +135,7 @@ jobs:
 
       - name: Install Moodle ${{ matrix.moodle-versions }}
         run: |
+          nvm use ${{ matrix.node-versions }}
           moodle-plugin-ci install --plugin ./plugin --db-host=127.0.0.1 --node-version=${{ matrix.node-versions }}
         env:
           DB: ${{ matrix.database }}
