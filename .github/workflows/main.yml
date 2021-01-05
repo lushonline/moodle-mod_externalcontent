@@ -10,7 +10,7 @@ jobs:
 
     strategy:
       fail-fast: true
-            matrix:
+      matrix:
         moodle-versions: [
           'MOODLE_32_STABLE',
           'MOODLE_33_STABLE',
