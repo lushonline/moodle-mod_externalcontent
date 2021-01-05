@@ -11,7 +11,7 @@ jobs:
     strategy:
       fail-fast: true
             matrix:
-        moodle-version: [
+        moodle-versions: [
           'MOODLE_32_STABLE',
           'MOODLE_33_STABLE',
           'MOODLE_34_STABLE'
@@ -31,15 +31,15 @@ jobs:
         ]
 
         exclude:
-          - moodle-version: 'MOODLE_34_STABLE'
+          - moodle-versions: 'MOODLE_34_STABLE'
             php-versions: '7.0'
         include:
-          - moodle-version: 'MOODLE_34_STABLE'
+          - moodle-versions: 'MOODLE_34_STABLE'
             database: 'pgsql'
             operating-system: 'ubuntu-latest'
             php-versions: '7.2'
             node-versions: '8.9'
-          - moodle-version: 'MOODLE_34_STABLE'
+          - moodle-versions: 'MOODLE_34_STABLE'
             database: 'mariadb'
             operating-system: 'ubuntu-latest'
             php-versions: '7.2'
