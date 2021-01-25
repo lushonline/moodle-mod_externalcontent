@@ -28,7 +28,7 @@ defined('MOODLE_INTERNAL') || die();
 // https://docs.moodle.org/dev/Backup_2.0_for_developers.
 // https://docs.moodle.org/dev/Restore_2.0_for_developers.
 
-require_once($CFG->dirroot.'//mod/externalcontent/backup/moodle2/restore_externalcontent_stepslib.php');
+require_once($CFG->dirroot.'/mod/externalcontent/backup/moodle2/restore_externalcontent_stepslib.php');
 
 /**
  * Restore task for mod_externalcontent.

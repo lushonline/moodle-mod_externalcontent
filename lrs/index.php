@@ -22,11 +22,11 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 define('NO_MOODLE_COOKIES', true);
-require_once('../../../config.php');
+require_once(__DIR__.'/../../../config.php');
 
-require('./vendor/autoload.php');
-require('./statementcontroller.php');
-require('./aboutcontroller.php');
+require($CFG->dirroot.'/mod/externalcontent/lrs/vendor/autoload.php');
+require($CFG->dirroot.'/mod/externalcontent/lrs/statementcontroller.php');
+require($CFG->dirroot.'/mod/externalcontent/lrs/aboutcontroller.php');
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 

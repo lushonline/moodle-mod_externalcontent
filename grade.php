@@ -22,7 +22,7 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require('../../config.php');
+require(__DIR__.'/../../config.php');
 
 // Course_module ID.
 $id = required_param('id', PARAM_INT);

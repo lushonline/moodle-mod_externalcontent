@@ -24,8 +24,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once("$CFG->dirroot/mod/externalcontent/lib.php");
-require_once("$CFG->libdir/resourcelib.php");
+require_once($CFG->dirroot.'/mod/externalcontent/lib.php');
+require_once($CFG->libdir.'/resourcelib.php');
 
 
 /**

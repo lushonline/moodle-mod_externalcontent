@@ -52,7 +52,7 @@ defined('MOODLE_INTERNAL') || die;
  */
 function xmldb_externalcontent_upgrade($oldversion) {
     global $CFG;
-    require_once($CFG->dirroot . '/mod/externalcontent/locallib.php');
+    require_once($CFG->dirroot.'/mod/externalcontent/locallib.php');
     externalcontent_set_randomlrscredentials();
     return true;
 }

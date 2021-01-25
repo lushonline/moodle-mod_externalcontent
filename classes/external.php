@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-require_once("$CFG->libdir/externallib.php");
+require_once($CFG->libdir.'/externallib.php');
 
 /**
  * mod_externalcontent functions
@@ -57,7 +57,7 @@ class mod_externalcontent_external extends external_api {
      */
     public static function view_externalcontent($externalcontentid) {
         global $DB, $CFG;
-        require_once($CFG->dirroot . "/mod/externalcontent/lib.php");
+        require_once($CFG->dirroot.'/mod/externalcontent/lib.php');
 
         $params = self::validate_parameters(self::view_externalcontent_parameters(),
                                             array(

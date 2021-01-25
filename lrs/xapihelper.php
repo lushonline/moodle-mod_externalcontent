@@ -26,11 +26,11 @@
 defined('MOODLE_INTERNAL') || die;
 
 global $CFG;
-require_once('../lib.php');
-require_once($CFG->libdir . '/completionlib.php');
-require_once($CFG->libdir . '/enrollib.php');
-require_once($CFG->dirroot . '/course/lib.php');
-require('./vendor/autoload.php');
+require_once($CFG->dirroot.'/mod/externalcontent/lib.php');
+require_once($CFG->libdir.'/completionlib.php');
+require_once($CFG->libdir.'/enrollib.php');
+require_once($CFG->dirroot.'/course/lib.php');
+require($CFG->dirroot.'/mod/externalcontent/lrs/vendor/autoload.php');
 use TinCan\Statement;
 use TinCan\Agent;
 

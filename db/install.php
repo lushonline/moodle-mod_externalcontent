@@ -37,6 +37,6 @@ defined('MOODLE_INTERNAL') || die;
 function xmldb_externalcontent_install() {
     // Create the private key.
     global $CFG;
-    require_once($CFG->dirroot . '/mod/externalcontent/locallib.php');
+    require_once($CFG->dirroot.'/mod/externalcontent/locallib.php');
     externalcontent_set_randomlrscredentials();
 }

@@ -23,7 +23,7 @@
  */
 defined('MOODLE_INTERNAL') || die;
 
-require('./vendor/autoload.php');
+require($CFG->dirroot.'/mod/externalcontent/lrs/vendor/autoload.php');
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Container\ContainerInterface;
