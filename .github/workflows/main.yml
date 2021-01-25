@@ -12,7 +12,6 @@ jobs:
       fail-fast: true
       matrix:
         moodle-versions: [
-          'MOODLE_35_STABLE',
           'MOODLE_36_STABLE',
           'MOODLE_37_STABLE',
           'MOODLE_38_STABLE',
@@ -28,7 +27,7 @@ jobs:
           ubuntu-latest
         ]
         php-versions: [
-          '7.2'
+          '7.3'
         ]
         node-versions: [
           '14.15.0'
@@ -42,12 +41,12 @@ jobs:
           - moodle-versions: 'MOODLE_36_STABLE'
             database: 'pgsql'
             operating-system: 'ubuntu-latest'
-            php-versions: '7.2'
+            php-versions: '7.3'
             node-versions: '8.9'
           - moodle-versions: 'MOODLE_36_STABLE'
             database: 'mariadb'
             operating-system: 'ubuntu-latest'
-            php-versions: '7.2'
+            php-versions: '7.3'
             node-versions: '8.9'
 
     runs-on: ${{ matrix.operating-system }}
