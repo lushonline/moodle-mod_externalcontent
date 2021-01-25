@@ -42,7 +42,7 @@ class mod_externalcontent_lrs_testcase extends advanced_testcase {
 
     /**
      * Return an incomplete xapi statement
-     * @return string The string representation of a GUIDv4
+     * @return TinCan\Statement The statement
      */
     private function get_incomplete_statement($username, $activityid) {
         $incomplete = [
@@ -77,8 +77,8 @@ class mod_externalcontent_lrs_testcase extends advanced_testcase {
     }
 
     /**
-     * Return an completed xapi statement
-     * @return string The string representation of a GUIDv4
+     * Return a completed xapi statement
+     * @return TinCan\Statement The statement
      */
     private function get_completed_statement($username, $activityid) {
         $complete = [
@@ -97,11 +97,6 @@ class mod_externalcontent_lrs_testcase extends advanced_testcase {
                 ],
             ],
             'result' => [
-                'score' => [
-                'raw' => 100,
-                'min' => 0,
-                'max' => 100,
-                ],
                 'success' => true,
                 'completion' => true,
             ],
@@ -122,6 +117,49 @@ class mod_externalcontent_lrs_testcase extends advanced_testcase {
     }
 
     /**
+     * Return a scored xapi statement
+     * @return TinCan\Statement The statement
+     */
+    private function get_scored_statement($username, $activityid) {
+        $scored = [
+            'id' => '3f961635-9b58-4683-8e85-372d8c7c5b2a',
+            'actor' => [
+                'objectType' => 'Agent',
+                'account' => [
+                'homePage' => 'https://externalprovider.com',
+                'name' => $username,
+                ],
+            ],
+            'verb' => [
+                'id' => 'http://adlnet.gov/expapi/verbs/experienced',
+                'display' => [
+                'en' => 'experienced',
+                ],
+            ],
+            'result' => [
+                'score' => [
+                'raw' => 50,
+                'min' => 0,
+                'max' => 100,
+                ],
+            ],
+            'timestamp' => '2020-12-14T16:22:52.000Z',
+            'version' => '1.0.0',
+            'object' => [
+                'id' => $activityid,
+                'definition' => [
+                'name' => [
+                    'en' => 'Test Activity',
+                ],
+                'type' => 'http://adlnet.gov/expapi/activities/course',
+                ],
+                'objectType' => 'Activity',
+            ],
+        ];
+        return new TinCan\Statement($scored);
+    }
+
+    /**
      * Return a guid
      * @return string The string representation of a GUIDv4
      */
@@ -135,123 +173,104 @@ class mod_externalcontent_lrs_testcase extends advanced_testcase {
     }
 
     /**
+     * Return LRS events object or null
+     * @return object The lrs event objects
+     */
+    private function get_lrs_events($events) {
+        $lrsevents = new \stdClass;
+        $lrsevents->viewed = Array();
+        $lrsevents->scored = Array();
+        $lrsevents->completed = Array();
+
+        // Filter for course_module_viewed.
+        $moduleviewedevents = array_filter($events, function($k) {
+            return $k instanceof mod_externalcontent\event\course_module_viewed;
+        });
+        $lrsevents->viewed = $moduleviewedevents;
+
+        // Filter for course_module_scoredexternally.
+        $modulescoredevents = array_filter($events, function($k) {
+            return $k instanceof mod_externalcontent\event\course_module_scoredexternally;
+        });
+        $lrsevents->scored = $modulescoredevents;
+
+        $modulecompletedevents = array_filter($events, function($k) {
+            return $k instanceof mod_externalcontent\event\course_module_completedexternally;
+        });
+        $lrsevents->completed = $modulecompletedevents;
+        return $lrsevents;
+    }
+
+    /**
+     * Set up for every test
+     */
+    public function setUp(): void {
+        global $CFG;
+
+        $CFG->enablecompletion = 1;
+
+        $this->resetAfterTest();
+        $this->setAdminUser();
+
+        // Create users.
+        $this->user = self::getDataGenerator()->create_user();
+
+        // Setup XAPI Activity Id.
+        $this->xapiactivityid = 'https://xapi.com/xapi/course/'.self::guidv4();
+
+        // Setup test data.
+        $this->course = $this->getDataGenerator()->create_course(
+                                array('enablecompletion' => 1, 'idnumber' => $this->xapiactivityid) );
+        $this->externalcontent = $this->getDataGenerator()->create_module('externalcontent',
+                              array('course' => $this->course->id, 'idnumber' => $this->xapiactivityid, 'completionexternally' => 1),
+                              array('completion' => 2, 'completionview' => 1) );
+
+        $this->context = context_module::instance($this->externalcontent->cmid);
+        $this->cm = get_coursemodule_from_instance('externalcontent', $this->externalcontent->id);
+    }
+
+    /**
      * Test course and module viewed only
      * @return void
      */
     public function test_externalcontent_lrs_xapihelper_processstatement_viewed() {
-        global $CFG;
-
-        $CFG->enablecompletion = 1;
-        $this->resetAfterTest();
-
-        $this->setAdminUser();
-        $user = $this->getDataGenerator()->create_user();
-
-        $xapiactivityid = 'https://xapi.com/xapi/course/'.self::guidv4();
-
-        // Create the activity.
-        $course = $this->getDataGenerator()->create_course(array('enablecompletion' => 1, 'idnumber' => $xapiactivityid));
-        $externalcontent = $this->getDataGenerator()->create_module('externalcontent',
-                              array('course' => $course->id, 'idnumber' => $xapiactivityid, 'completionexternally' => 1),
-                              array('completion' => 2, 'completionview' => 1) );
-
-        // Get some additional data.
-        $context = context_module::instance($externalcontent->cmid);
-        $cm = get_coursemodule_from_instance('externalcontent', $externalcontent->id);
-
         // Trigger and capture the event.
         $sink = $this->redirectEvents();
 
-        $statement = self::get_incomplete_statement($user->username, $xapiactivityid);
+        $statement = self::get_incomplete_statement($this->user->username, $this->xapiactivityid);
         $payload = xapihelper::processstatement('1.0.0', $statement, true);
 
         $events = $sink->get_events();
 
-        // Filter for course_module_viewed.
-        $moduleviewedevents = array_filter($events, function($k) {
-            return $k instanceof mod_externalcontent\event\course_module_viewed;
-        });
-        $this->assertCount(1, $moduleviewedevents);
-        $moduleviewedevent = reset($moduleviewedevents);
+        $lrsevents = get_lrs_events($events);
+        $this->assertCount(1, $lrsevents->viewed);
+        $moduleviewedevent = reset($lrsevents->viewed);
 
         // Checking that the event contains the expected values.
         $this->assertInstanceOf('\mod_externalcontent\event\course_module_viewed', $moduleviewedevent);
         $this->assertEquals($context, $moduleviewedevent->get_context());
         $this->assertEventContextNotUsed($moduleviewedevent);
         $this->assertNotEmpty($moduleviewedevent->get_name());
-
-        // Filter for course_module_scoredexternally.
-        $modulescoredevents = array_filter($events, function($k) {
-            return $k instanceof mod_externalcontent\event\course_module_scoredexternally;
-        });
-
-        // Checking that the event does not exist.
-        $this->assertCount(0, $modulescoredevents);
-
-        // Filter for course_module_scoredexternally.
-        $modulecompletedevents = array_filter($events, function($k) {
-            return $k instanceof mod_externalcontent\event\course_module_completedexternally;
-        });
-        // Checking that the event does not exist.
-        $this->assertCount(0, $modulecompletedevents);
     }
 
     /**
-     * Test course and module completed
+     * Test course and module scored
      * @return void
      */
-    public function test_externalcontent_lrs_xapihelper_processstatement_completed() {
-        global $CFG;
-
-        $CFG->enablecompletion = 1;
-        $this->resetAfterTest();
-
-        $this->setAdminUser();
-        $user = $this->getDataGenerator()->create_user();
-
-        $xapiactivityid = 'https://xapi.com/xapi/course/'.self::guidv4();
-
-        // Create the activity.
-        $course = $this->getDataGenerator()->create_course(array('enablecompletion' => 1, 'idnumber' => $xapiactivityid));
-        $externalcontent = $this->getDataGenerator()->create_module('externalcontent',
-                            array('course' => $course->id, 'idnumber' => $xapiactivityid, 'completionexternally' => 1),
-                            array('completion' => 2, 'completionview' => 1) );
-
-        // Get some additional data.
-        $context = context_module::instance($externalcontent->cmid);
-        $cm = get_coursemodule_from_instance('externalcontent', $externalcontent->id);
-
+    public function test_externalcontent_lrs_xapihelper_processstatement_scored() {
         // Trigger and capture the event.
         $sink = $this->redirectEvents();
 
-        $statement = self::get_completed_statement($user->username, $xapiactivityid);
+        $statement = self::get_scored_statement($this->user->username, $this->xapiactivityid);
         $payload = xapihelper::processstatement('1.0.0', $statement, true);
 
         $events = $sink->get_events();
 
-        // Filter for course_module_viewed.
-        $moduleviewedevents = array_filter($events, function($k) {
-            return $k instanceof mod_externalcontent\event\course_module_viewed;
-        });
+        $lrsevents = get_lrs_events($events);
 
         // Checking that the event exists.
-        $this->assertCount(1, $moduleviewedevents);
-        $moduleviewedevent = reset($moduleviewedevents);
-
-        // Checking that the event contains the expected values.
-        $this->assertInstanceOf('\mod_externalcontent\event\course_module_viewed', $moduleviewedevent);
-        $this->assertEquals($context, $moduleviewedevent->get_context());
-        $this->assertEventContextNotUsed($moduleviewedevent);
-        $this->assertNotEmpty($moduleviewedevent->get_name());
-
-        // Filter for course_module_scoredexternally.
-        $modulescoredevents = array_filter($events, function($k) {
-            return $k instanceof mod_externalcontent\event\course_module_scoredexternally;
-        });
-
-        // Checking that the event exists.
-        $this->assertCount(1, $modulescoredevents);
-        $modulescoredevent = reset($modulescoredevents);
+        $this->assertCount(1, $lrsevents->scored);
+        $modulescoredevent = reset($lrsevents->scored);
 
         // Checking that the event contains the expected values.
         $this->assertInstanceOf('\mod_externalcontent\event\course_module_scoredexternally', $modulescoredevent);
@@ -259,14 +278,26 @@ class mod_externalcontent_lrs_testcase extends advanced_testcase {
         $this->assertEventContextNotUsed($modulescoredevent);
         $this->assertNotEmpty($modulescoredevent->get_name());
 
-        // Filter for course_module_scoredexternally.
-        $modulecompletedevents = array_filter($events, function($k) {
-            return $k instanceof mod_externalcontent\event\course_module_completedexternally;
-        });
+    }
+
+    /**
+     * Test course and module completed
+     * @return void
+     */
+    public function test_externalcontent_lrs_xapihelper_processstatement_completed() {
+        // Trigger and capture the event.
+        $sink = $this->redirectEvents();
+
+        $statement = self::get_completed_statement($this->user->username, $this->xapiactivityid);
+        $payload = xapihelper::processstatement('1.0.0', $statement, true);
+
+        $events = $sink->get_events();
+
+        $lrsevents = get_lrs_events($events);
 
         // Checking that the event exists.
-        $this->assertCount(1, $modulecompletedevents);
-        $modulecompletedevent = reset($modulecompletedevents);
+        $this->assertCount(1, $lrsevents->completed);
+        $modulecompletedevent = reset($lrsevents->completed);
 
         // Checking that the event contains the expected values.
         $this->assertInstanceOf('\mod_externalcontent\event\course_module_completedexternally', $modulecompletedevent);
