@@ -248,7 +248,7 @@ class mod_externalcontent_lrs_testcase extends advanced_testcase {
 
         // Checking that the event contains the expected values.
         $this->assertInstanceOf('\mod_externalcontent\event\course_module_viewed', $moduleviewedevent);
-        $this->assertEquals($context, $moduleviewedevent->get_context());
+        $this->assertEquals($this->context, $moduleviewedevent->get_context());
         $this->assertEventContextNotUsed($moduleviewedevent);
         $this->assertNotEmpty($moduleviewedevent->get_name());
     }
@@ -274,7 +274,7 @@ class mod_externalcontent_lrs_testcase extends advanced_testcase {
 
         // Checking that the event contains the expected values.
         $this->assertInstanceOf('\mod_externalcontent\event\course_module_scoredexternally', $modulescoredevent);
-        $this->assertEquals($context, $modulescoredevent->get_context());
+        $this->assertEquals($this->context, $modulescoredevent->get_context());
         $this->assertEventContextNotUsed($modulescoredevent);
         $this->assertNotEmpty($modulescoredevent->get_name());
 
@@ -301,7 +301,7 @@ class mod_externalcontent_lrs_testcase extends advanced_testcase {
 
         // Checking that the event contains the expected values.
         $this->assertInstanceOf('\mod_externalcontent\event\course_module_completedexternally', $modulecompletedevent);
-        $this->assertEquals($context, $modulecompletedevent->get_context());
+        $this->assertEquals($this->context, $modulecompletedevent->get_context());
         $this->assertEventContextNotUsed($modulecompletedevent);
         $this->assertNotEmpty($modulecompletedevent->get_name());
     }
