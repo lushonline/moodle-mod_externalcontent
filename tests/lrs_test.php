@@ -44,7 +44,7 @@ class mod_externalcontent_lrs_testcase extends advanced_testcase {
      * Return an incomplete xapi statement
      * @return string The string representation of a GUIDv4
      */
-    private function getIncompleteStatement($username, $activityid) {
+    private function get_incomplete_statement($username, $activityid) {
         $incomplete = [
             'id' => '3f961635-9b58-4683-8e85-372d8c7c5b2a',
             'actor' => [
@@ -80,7 +80,7 @@ class mod_externalcontent_lrs_testcase extends advanced_testcase {
      * Return an completed xapi statement
      * @return string The string representation of a GUIDv4
      */
-    private function getCompletedStatement($username, $activityid) {
+    private function get_completed_statement($username, $activityid) {
         $complete = [
             'id' => '3f961635-9b58-4683-8e85-372d8c7c5b2a',
             'actor' => [
@@ -162,14 +162,14 @@ class mod_externalcontent_lrs_testcase extends advanced_testcase {
         // Trigger and capture the event.
         $sink = $this->redirectEvents();
 
-        $statement = self::getIncompleteStatement($user->username, $xapiactivityid)
+        $statement = self::get_incomplete_statement($user->username, $xapiactivityid);
         $payload = xapihelper::processstatement('1.0.0', $statement, true);
 
         $events = $sink->get_events();
 
         // Filter for course_module_viewed.
         $moduleviewedevents = array_filter($events, function($k) {
-          return $k instanceof mod_externalcontent\event\course_module_viewed;
+            return $k instanceof mod_externalcontent\event\course_module_viewed;
         });
         $this->assertCount(1, $moduleviewedevents);
         $moduleviewedevent = reset($moduleviewedevents);
@@ -182,7 +182,7 @@ class mod_externalcontent_lrs_testcase extends advanced_testcase {
 
         // Filter for course_module_scoredexternally.
         $modulescoredevents = array_filter($events, function($k) {
-          return $k instanceof mod_externalcontent\event\course_module_scoredexternally;
+            return $k instanceof mod_externalcontent\event\course_module_scoredexternally;
         });
 
         // Checking that the event does not exist.
@@ -190,7 +190,7 @@ class mod_externalcontent_lrs_testcase extends advanced_testcase {
 
         // Filter for course_module_scoredexternally.
         $modulecompletedevents = array_filter($events, function($k) {
-          return $k instanceof mod_externalcontent\event\course_module_completedexternally;
+            return $k instanceof mod_externalcontent\event\course_module_completedexternally;
         });
         // Checking that the event does not exist.
         $this->assertCount(0, $modulecompletedevents);
@@ -224,7 +224,7 @@ class mod_externalcontent_lrs_testcase extends advanced_testcase {
         // Trigger and capture the event.
         $sink = $this->redirectEvents();
 
-        $statement = self::getCompletedStatement($user->username, $xapiactivityid)
+        $statement = self::get_completed_statement($user->username, $xapiactivityid);
         $payload = xapihelper::processstatement('1.0.0', $statement, true);
 
         $events = $sink->get_events();
