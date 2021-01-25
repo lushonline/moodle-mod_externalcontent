@@ -242,7 +242,7 @@ class mod_externalcontent_lrs_testcase extends advanced_testcase {
 
         $events = $sink->get_events();
 
-        $lrsevents = get_lrs_events($events);
+        $lrsevents = self::get_lrs_events($events);
         $this->assertCount(1, $lrsevents->viewed);
         $moduleviewedevent = reset($lrsevents->viewed);
 
@@ -266,7 +266,7 @@ class mod_externalcontent_lrs_testcase extends advanced_testcase {
 
         $events = $sink->get_events();
 
-        $lrsevents = get_lrs_events($events);
+        $lrsevents = self::get_lrs_events($events);
 
         // Checking that the event exists.
         $this->assertCount(1, $lrsevents->scored);
@@ -293,7 +293,7 @@ class mod_externalcontent_lrs_testcase extends advanced_testcase {
 
         $events = $sink->get_events();
 
-        $lrsevents = get_lrs_events($events);
+        $lrsevents = self::get_lrs_events($events);
 
         // Checking that the event exists.
         $this->assertCount(1, $lrsevents->completed);
