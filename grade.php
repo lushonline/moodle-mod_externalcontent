@@ -18,7 +18,7 @@
  * Private externalcontent module utility functions
  *
  * @package     mod_externalcontent
- * @copyright   2019-2020 LushOnline
+ * @copyright   2019-2021 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

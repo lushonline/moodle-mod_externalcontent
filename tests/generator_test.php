@@ -18,7 +18,7 @@
  * Library of interface functions and constants.
  *
  * @package     mod_externalcontent
- * @copyright   2019-2020 LushOnline
+ * @copyright   2019-2021 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 defined('MOODLE_INTERNAL') || die();
@@ -28,7 +28,7 @@ defined('MOODLE_INTERNAL') || die();
  * PHPUnit data generator testcase
  *
  * @package     mod_externalcontent
- * @copyright   2019-2020 LushOnline
+ * @copyright   2019-2021 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_externalcontent_generator_testcase extends advanced_testcase {

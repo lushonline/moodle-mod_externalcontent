@@ -18,7 +18,7 @@
  * Social breadth indicator - externalcontent.
  *
  * @package     mod_externalcontent
- * @copyright   2019-2020 LushOnline
+ * @copyright   2019-2021 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -30,7 +30,7 @@ defined('MOODLE_INTERNAL') || die();
  * Social breadth indicator - externalcontent.
  *
  * @package     mod_externalcontent
- * @copyright   2019-2020 LushOnline
+ * @copyright   2019-2021 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class social_breadth extends activity_base {

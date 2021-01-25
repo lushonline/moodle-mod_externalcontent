@@ -19,7 +19,7 @@
  *
  * @package     mod_externalcontent
  * @category    external
- * @copyright   2019-2020 LushOnline
+ * @copyright   2019-2021 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -31,7 +31,7 @@ defined('MOODLE_INTERNAL') || die();
  *
  * @package     mod_externalcontent
  * @category    external
- * @copyright   2019-2020 LushOnline
+ * @copyright   2019-2021 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_externalcontent_lib_testcase extends advanced_testcase {

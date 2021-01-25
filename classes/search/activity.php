@@ -18,7 +18,7 @@
  * Search area for mod_externalcontent activities.
  *
  * @package     mod_externalcontent
- * @copyright   2019-2020 LushOnline
+ * @copyright   2019-2021 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -30,7 +30,7 @@ defined('MOODLE_INTERNAL') || die();
  * Search area for mod_externalcontent activities.
  *
  * @package     mod_externalcontent
- * @copyright   2019-2020 LushOnline
+ * @copyright   2019-2021 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class activity extends \core_search\base_activity {

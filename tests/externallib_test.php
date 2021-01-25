@@ -19,7 +19,7 @@
  *
  * @package     mod_externalcontent
  * @category    external
- * @copyright   2019-2020 LushOnline
+ * @copyright   2019-2021 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -34,7 +34,7 @@ require_once($CFG->dirroot.'/webservice/tests/helpers.php');
  *
  * @package     mod_externalcontent
  * @category    external
- * @copyright   2019-2020 LushOnline
+ * @copyright   2019-2021 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_externalcontent_external_testcase extends externallib_advanced_testcase {

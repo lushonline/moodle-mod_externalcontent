@@ -18,7 +18,7 @@
  * Basic LRS functionality to allow
  *
  * @package     mod_externalcontent
- * @copyright   2019-2020 LushOnline
+ * @copyright   2019-2021 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 defined('MOODLE_INTERNAL') || die;
@@ -32,7 +32,7 @@ use Psr\Container\ContainerInterface;
  * Class containing controllers for about
  *
  * @package   mod_externalcontent
- * @copyright 2019-2020 LushOnline
+ * @copyright 2019-2021 LushOnline
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class AboutController

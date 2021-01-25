@@ -19,7 +19,7 @@
  *
  * @package     mod_externalcontent
  * @category    backup
- * @copyright   2019-2020 LushOnline
+ * @copyright   2019-2021 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -34,7 +34,7 @@ require_once($CFG->dirroot.'//mod/externalcontent/backup/moodle2/backup_external
 /**
  * The class provides all the settings and steps to perform one complete backup of mod_externalcontent.
  * @package     mod_externalcontent
- * @copyright   2019-2020 LushOnline
+ * @copyright   2019-2021 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class backup_externalcontent_activity_task extends backup_activity_task {
