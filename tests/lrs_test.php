@@ -27,6 +27,7 @@ defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
 require_once($CFG->dirroot . '/mod/externalcontent/lib.php');
+require_once($CFG->dirroot . '/mod/externalcontent/locallib.php');
 require($CFG->dirroot . '/mod/externalcontent/lrs/vendor/autoload.php');
 require($CFG->dirroot . '/mod/externalcontent/lrs/xapihelper.php');
 
@@ -222,7 +223,8 @@ class mod_externalcontent_lrs_testcase extends advanced_testcase {
         $this->course = $this->getDataGenerator()->create_course(
                                 array('enablecompletion' => 1, 'idnumber' => $this->xapiactivityid) );
         $this->externalcontent = $this->getDataGenerator()->create_module('externalcontent',
-                              array('course' => $this->course->id, 'idnumber' => $this->xapiactivityid, 'completionexternally' => 1),
+                              array('course' => $this->course->id, 'idnumber' => $this->xapiactivityid,
+                                    'completionexternally' => 1),
                               array('completion' => 2, 'completionview' => 1) );
 
         $this->context = context_module::instance($this->externalcontent->cmid);
@@ -251,6 +253,9 @@ class mod_externalcontent_lrs_testcase extends advanced_testcase {
         $this->assertEquals($this->context, $moduleviewedevent->get_context());
         $this->assertEventContextNotUsed($moduleviewedevent);
         $this->assertNotEmpty($moduleviewedevent->get_name());
+
+        // Checking correct error code returned.
+        $this->assertEquals($payload->updateresponse->lrserrorcode, EXTERNALCONTENT_LRS_NO_ERROR);
     }
 
     /**
@@ -278,6 +283,8 @@ class mod_externalcontent_lrs_testcase extends advanced_testcase {
         $this->assertEventContextNotUsed($modulescoredevent);
         $this->assertNotEmpty($modulescoredevent->get_name());
 
+        // Checking correct error code returned.
+        $this->assertEquals($payload->updateresponse->lrserrorcode, EXTERNALCONTENT_LRS_NO_ERROR);
     }
 
     /**
@@ -304,6 +311,39 @@ class mod_externalcontent_lrs_testcase extends advanced_testcase {
         $this->assertEquals($this->context, $modulecompletedevent->get_context());
         $this->assertEventContextNotUsed($modulecompletedevent);
         $this->assertNotEmpty($modulecompletedevent->get_name());
+
+        // Checking correct error code returned.
+        $this->assertEquals($payload->updateresponse->lrserrorcode, EXTERNALCONTENT_LRS_NO_ERROR);
+    }
+
+    /**
+     * Test that activity id lookup not matching course doesnt generate error
+     * @return void
+     */
+    public function test_externalcontent_lrs_xapihelper_processstatement_nocoursematch() {
+        $statement = self::get_completed_statement($this->user->username, $this->xapiactivityid.'1');
+        $payload = xapihelper::processstatement('1.0.0', $statement, true);
+
+        // Checking that course is empty.
+        $this->assertEmpty($payload->course);
+
+        // Checking correct error code returned.
+        $this->assertEquals($payload->updateresponse->lrserrorcode, EXTERNALCONTENT_LRS_COURSE_NOT_FOUND);
+    }
+
+    /**
+     * Test that username lookup failing doesnt generate error
+     * @return void
+     */
+    public function test_externalcontent_lrs_xapihelper_processstatement_nousermatch() {
+        $statement = self::get_completed_statement($this->user->username.'1', $this->xapiactivityid);
+        $payload = xapihelper::processstatement('1.0.0', $statement, true);
+
+        // Checking that user is empty.
+        $this->assertEmpty($payload->user);
+
+        // Checking correct error code returned.
+        $this->assertEquals($payload->updateresponse->lrserrorcode, EXTERNALCONTENT_LRS_USER_NOT_FOUND);
     }
 
 }
