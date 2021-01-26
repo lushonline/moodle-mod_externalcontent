@@ -27,6 +27,11 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot.'/mod/externalcontent/lib.php');
 require_once($CFG->libdir.'/resourcelib.php');
 
+/** LRS Statement Processing Errors */
+define('EXTERNALCONTENT_LRS_NO_ERROR', 0);
+define('EXTERNALCONTENT_LRS_COURSE_NOT_FOUND', 1);
+define('EXTERNALCONTENT_LRS_COURSEMODULE_NOT_FOUND', 2);
+define('EXTERNALCONTENT_LRS_USER_NOT_FOUND', 3);
 
 /**
  * This function checks if an xapi password has been generated for this site.

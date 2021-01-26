@@ -27,6 +27,7 @@ defined('MOODLE_INTERNAL') || die;
 
 global $CFG;
 require_once($CFG->dirroot.'/mod/externalcontent/lib.php');
+require_once($CFG->dirroot.'/mod/externalcontent/locallib.php');
 require_once($CFG->libdir.'/completionlib.php');
 require_once($CFG->libdir.'/enrollib.php');
 require_once($CFG->dirroot.'/course/lib.php');
@@ -202,14 +203,18 @@ class xapihelper {
 
                     $response = externalcontent_update_completion_state($record->course, $record->cm, null, $record->user->id,
                                                                               $record->score, $record->completed, 1, 1);
+                    $response->lrserrorcode = EXTERNALCONTENT_LRS_NO_ERROR;
                 } else {
                     $response->message = "Course module does not exist.";
+                    $response->lrserrorcode = EXTERNALCONTENT_LRS_COURSEMODULE_NOT_FOUND;
                 }
             } else {
                 $response->message = "User does not exist.";
+                $response->lrserrorcode = EXTERNALCONTENT_LRS_USER_NOT_FOUND;
             }
         } else {
             $response->message = "Course does not exist.";
+            $response->lrserrorcode = EXTERNALCONTENT_LRS_COURSE_NOT_FOUND;
         }
         return $response;
     }
