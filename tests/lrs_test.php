@@ -43,6 +43,9 @@ class mod_externalcontent_lrs_testcase extends advanced_testcase {
 
     /**
      * Return an incomplete xapi statement
+     *
+     * @param string $username The actor username
+     * @param string $activityid The object id
      * @return TinCan\Statement The statement
      */
     private function get_incomplete_statement($username, $activityid) {
@@ -79,6 +82,9 @@ class mod_externalcontent_lrs_testcase extends advanced_testcase {
 
     /**
      * Return a completed xapi statement
+     *
+     * @param string $username The actor username
+     * @param string $activityid The object id
      * @return TinCan\Statement The statement
      */
     private function get_completed_statement($username, $activityid) {
@@ -119,6 +125,9 @@ class mod_externalcontent_lrs_testcase extends advanced_testcase {
 
     /**
      * Return a scored xapi statement
+     *
+     * @param string $username The actor username
+     * @param string $activityid The object id
      * @return TinCan\Statement The statement
      */
     private function get_scored_statement($username, $activityid) {
@@ -175,6 +184,8 @@ class mod_externalcontent_lrs_testcase extends advanced_testcase {
 
     /**
      * Return LRS events object or null
+     *
+     * @param \core\event\base[] $events The array of Moodle events
      * @return object The lrs event objects
      */
     private function get_lrs_events($events) {
