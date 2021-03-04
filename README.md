@@ -36,7 +36,7 @@ The External Content Activity items need to be configured to be marked completed
 
 The xAPI statements are not saved to Moodle, but processed on receipt.
 
-The Statement [Object Id](https://github.com/adlnet/xAPI-Spec/blob/master/xAPI-Data.md#acturi) is used to identify the course and External Content Activity Item, the Moodle [Course ID Number](https://docs.moodle.org/310/en/Course_settings#Course_ID_number) and the External Content Activity Item ID Number needs to be set to this value.
+The Statement [Object Id](https://github.com/adlnet/xAPI-Spec/blob/master/xAPI-Data.md#acturi) is used to identify the External Content Activity Item, the External Content Activity Item [ID Number](https://docs.moodle.org/310/en/Common_module_settings#ID_number) needs to be set to this value.
 
 The Statement [Actor Account Name](https://github.com/adlnet/xAPI-Spec/blob/master/xAPI-Data.md#inversefunctional) is used to identify the Moodle User using their Moodle [Username](https://docs.moodle.org/310/en/Add_a_new_user#Username).
 
