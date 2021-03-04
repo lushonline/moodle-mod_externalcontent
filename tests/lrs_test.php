@@ -229,10 +229,11 @@ class mod_externalcontent_lrs_testcase extends advanced_testcase {
 
         // Setup XAPI Activity Id.
         $this->xapiactivityid = 'https://xapi.com/xapi/course/'.self::guidv4();
+        $this->courseidnumber = self::guidv4();
 
         // Setup test data.
         $this->course = $this->getDataGenerator()->create_course(
-                                array('enablecompletion' => 1, 'idnumber' => $this->xapiactivityid) );
+                                array('enablecompletion' => 1, 'idnumber' => $this->courseidnumber) );
         $this->externalcontent = $this->getDataGenerator()->create_module('externalcontent',
                               array('course' => $this->course->id, 'idnumber' => $this->xapiactivityid,
                                     'completionexternally' => 1),
@@ -331,12 +332,12 @@ class mod_externalcontent_lrs_testcase extends advanced_testcase {
      * Test that activity id lookup not matching course doesnt generate error
      * @return void
      */
-    public function test_externalcontent_lrs_xapihelper_processstatement_nocoursematch() {
+    public function test_externalcontent_lrs_xapihelper_processstatement_noactivitymatch() {
         $statement = self::get_completed_statement($this->user->username, $this->xapiactivityid.'1');
         $payload = xapihelper::processstatement('1.0.0', $statement, true);
 
         // Checking that course is empty.
-        $this->assertEmpty($payload->course);
+        $this->assertEmpty($payload->cm);
 
         // Checking correct error code returned.
         $this->assertEquals($payload->updateresponse->lrserrorcode, EXTERNALCONTENT_LRS_COURSE_NOT_FOUND);
