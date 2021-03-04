@@ -329,7 +329,7 @@ class mod_externalcontent_lrs_testcase extends advanced_testcase {
     }
 
     /**
-     * Test that activity id lookup not matching course doesnt generate error
+     * Test that activity id lookup not matching course module doesnt generate error
      * @return void
      */
     public function test_externalcontent_lrs_xapihelper_processstatement_noactivitymatch() {
@@ -340,7 +340,7 @@ class mod_externalcontent_lrs_testcase extends advanced_testcase {
         $this->assertEmpty($payload->cm);
 
         // Checking correct error code returned.
-        $this->assertEquals($payload->updateresponse->lrserrorcode, EXTERNALCONTENT_LRS_COURSE_NOT_FOUND);
+        $this->assertEquals($payload->updateresponse->lrserrorcode, EXTERNALCONTENT_LRS_COURSEMODULE_NOT_FOUND);
     }
 
     /**
