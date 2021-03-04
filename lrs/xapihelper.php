@@ -75,12 +75,18 @@ class xapihelper {
 
         $score = $result != null ? $result->getScore() : null;
         $payload->score = $score != null ? $score->getRaw() : null;
-
-        $payload->course = self::get_course_by_idnumber($payload->object);
         $payload->user = self::get_user_by_username($payload->actor);
-        $payload->cm = $payload->course ? self::get_coursemodule_from_course_idnumber($payload->course) : null;
+        $payload->cm = null;
+        $payload->course = null;
+        $payload->updateresponse = null;
 
-        $payload->updateresponse = self::mark_completed($payload);
+        // Retrieve the course module that has the specified object id as its idnumber.
+        // Moodle prevents duplicate idnumbers.
+        if ($cm = self::get_cm_by_idnumber($payload->object)) {
+            $payload->cm = $cm;
+            $payload->course = self::get_course_by_id($cm->course);
+            $payload->updateresponse = self::mark_completed($payload);
+        }
 
         return $payload;
     }
@@ -89,7 +95,7 @@ class xapihelper {
     /**
      * Retrieve a user by username.
      *
-     * @return object role or null
+     * @return object|null role or null.
      */
     public static function get_student_role() {
         global $DB;
@@ -104,8 +110,8 @@ class xapihelper {
     /**
      * Retrieve a user by username.
      *
-     * @param string $username Moodle username
-     * @return object user or null
+     * @param string $username Moodle username.
+     * @return object|null user or null.
      */
     public static function get_user_by_username($username) {
         global $DB;
@@ -120,32 +126,15 @@ class xapihelper {
     }
 
     /**
-     * Retrieve a externalcontent by its id.
+     * Retrieve a course by its id.
      *
-     * @param int $externalcontentid externalcontent identifier
-     * @return object externalcontent.
+     * @param string $courseid course id.
+     * @return object|null course or null.
      */
-    public static function get_externalcontent_by_id($externalcontentid) {
+    public static function get_course_by_id($courseid) {
         global $DB;
 
-        $params = array('id' => $externalcontentid);
-        if ($externalcontent = $DB->get_record('externalcontent', $params)) {
-            return $externalcontent;
-        } else {
-             return null;
-        }
-    }
-
-    /**
-     * Retrieve a course by its idnumber.
-     *
-     * @param string $courseidnumber course idnumber
-     * @return object course or null
-     */
-    public static function get_course_by_idnumber($courseidnumber) {
-        global $DB;
-
-        $params = array('idnumber' => $courseidnumber);
+        $params = array('id' => $courseid);
         if ($course = $DB->get_record('course', $params)) {
             return $course;
         } else {
@@ -154,21 +143,26 @@ class xapihelper {
     }
 
     /**
-     * Retrieve course module $cm by course idnumber.
+     * Retrieve the course module with idnumber
      *
-     * use modinfolib.php
-     *
-     * @param string $course course object
-     * @return stdClass $cm Activity or null if none found
+     * @param string $idnumber Unique idnumber
+     * @return object|null coursemodules or null
      */
-    public static function get_coursemodule_from_course_idnumber($course) {
+    public static function get_cm_by_idnumber($idnumber) {
         global $DB;
 
-        $cm = null;
-        $params = array('idnumber' => $course->idnumber, 'course' => $course->id);
-        $cm = $DB->get_record('course_modules', $params);
+        $params = array('courseidnumber' => $idnumber, 'modulename' => 'externalcontent');
 
-        return $cm;
+        $sql = "SELECT cm.*
+                FROM {course_modules} cm
+                JOIN {modules} md ON md.id = cm.module
+                WHERE cm.idnumber = :courseidnumber AND md.name = :modulename";
+
+        if ($cm = $DB->get_record_sql($sql, $params)) {
+            return $cm;
+        } else {
+            return null;
+        }
     }
 
     /**
