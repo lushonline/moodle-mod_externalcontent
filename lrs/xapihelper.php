@@ -86,6 +86,9 @@ class xapihelper {
             $payload->cm = $cm;
             $payload->course = self::get_course_by_id($cm->course);
             $payload->updateresponse = self::mark_completed($payload);
+        } else {
+            $payload->updateresponse->message = "Course module does not exist.";
+            $payload->updateresponse->lrserrorcode = EXTERNALCONTENT_LRS_COURSEMODULE_NOT_FOUND;
         }
 
         return $payload;
