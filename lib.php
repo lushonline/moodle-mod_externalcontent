@@ -449,6 +449,7 @@ function externalcontent_update_completion_state($course, $cm, $context = null, 
         $currentstate = $completion->get_data($cm, false, $userid, null);
 
         if ($currentstate->viewed == COMPLETION_VIEWED) {
+            $response->message .= ' External content viewed status already set to COMPLETION_VIEWED.';
             $response->viewedupdated = false;
         } else {
             externalcontent_viewed($course, $cm, null, $userid);
@@ -458,6 +459,7 @@ function externalcontent_update_completion_state($course, $cm, $context = null, 
 
         if ($completed) {
             if ($currentstate->completionstate == COMPLETION_COMPLETE) {
+                $response->message .= ' External content completion state already set to COMPLETION_COMPLETE.';
                 $response->completionupdated = false;
             } else {
                 $params = array(
