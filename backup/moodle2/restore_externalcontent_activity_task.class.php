@@ -59,7 +59,7 @@ class restore_externalcontent_activity_task extends restore_activity_task {
      *
      * @return array.
      */
-    static public function define_decode_contents() {
+    public static function define_decode_contents() {
         $contents = array();
 
         // Define the contents.
@@ -73,7 +73,7 @@ class restore_externalcontent_activity_task extends restore_activity_task {
      *
      * @return array.
      */
-    static public function define_decode_rules() {
+    public static function define_decode_rules() {
         $rules = array();
 
         // Define the rules.
@@ -90,7 +90,7 @@ class restore_externalcontent_activity_task extends restore_activity_task {
      *
      * @return array.
      */
-    static public function define_restore_log_rules() {
+    public static function define_restore_log_rules() {
         $rules = array();
 
         // Define the rules.
@@ -113,7 +113,7 @@ class restore_externalcontent_activity_task extends restore_activity_task {
      * by the restore final task, but are defined here at
      * activity level. All them are rules not linked to any module instance (cmid = 0)
      */
-    static public function define_restore_log_rules_for_course() {
+    public static function define_restore_log_rules_for_course() {
         $rules = array();
 
         // Define the rules.
