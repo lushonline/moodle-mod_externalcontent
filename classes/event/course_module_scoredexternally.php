@@ -70,7 +70,9 @@ class course_module_scoredexternally extends \core\event\base {
      */
     public function get_description() {
         return get_string('eventscoredexternallydesc', 'externalcontent',
-                            ['userid' => $this->userid, 'contextinstanceid' => $this->contextinstanceid, 'score' => $this->other]);
+                            ['userid' => $this->relateduserid ?? $this->userid,
+                             'contextinstanceid' => $this->contextinstanceid,
+                             'score' => $this->other]);
     }
 
     /**

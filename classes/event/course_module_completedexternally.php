@@ -70,7 +70,8 @@ class course_module_completedexternally extends \core\event\base {
      */
     public function get_description() {
         return get_string('eventcompletedexternallydesc', 'externalcontent',
-                            ['userid' => $this->userid, 'contextinstanceid' => $this->contextinstanceid]);
+                            ['userid' => $this->relateduserid ?? $this->userid,
+                             'contextinstanceid' => $this->contextinstanceid]);
     }
 
     /**

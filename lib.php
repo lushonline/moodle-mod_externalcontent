@@ -426,6 +426,7 @@ function externalcontent_update_completion_state($course, $cm, $context = null, 
     }
 
     $response = new \stdClass();
+    $response->userid = $userid;
     $response->status = false;
     $response->completionupdated = false;
     $response->scoreupdated = false;
@@ -458,22 +459,22 @@ function externalcontent_update_completion_state($course, $cm, $context = null, 
         }
 
         if ($completed) {
+            $params = array(
+                'context' => $context,
+                'objectid' => $externalcontent->id,
+                'relateduserid' => $userid,
+            );
+
+            $event = \mod_externalcontent\event\course_module_completedexternally::create($params);
+            $event->add_record_snapshot('course_modules', $cm);
+            $event->add_record_snapshot('course', $course);
+            $event->add_record_snapshot('externalcontent', $externalcontent);
+            $event->trigger();
+
             if ($currentstate->completionstate == COMPLETION_COMPLETE) {
                 $response->message .= ' External content completion state already set to COMPLETION_COMPLETE.';
                 $response->completionupdated = false;
             } else {
-                $params = array(
-                    'context' => $context,
-                    'objectid' => $externalcontent->id,
-                    'userid' => $userid,
-                );
-
-                $event = \mod_externalcontent\event\course_module_completedexternally::create($params);
-                $event->add_record_snapshot('course_modules', $cm);
-                $event->add_record_snapshot('course', $course);
-                $event->add_record_snapshot('externalcontent', $externalcontent);
-                $event->trigger();
-
                 $completion->update_state($cm, COMPLETION_COMPLETE, $userid);
                 $response->message .= ' External content completion status set to COMPLETION_COMPLETE.';
                 $response->completionupdated = true;
@@ -484,7 +485,7 @@ function externalcontent_update_completion_state($course, $cm, $context = null, 
                 $params = array(
                     'context' => $context,
                     'objectid' => $externalcontent->id,
-                    'userid' => $userid,
+                    'relateduserid' => $userid,
                     'other' => $score,
                 );
 

@@ -28,7 +28,7 @@ require(__DIR__.'/../../config.php');
 $id = required_param('id', PARAM_INT);
 
 if (!$cm = get_coursemodule_from_id('externalcontent', $id)) {
-    print_error('invalidcoursemodule');
+    throw new moodle_exception('invalidcoursemodule', 'error');
 }
 $externalcontent = $DB->get_record('externalcontent', array('id' => $cm->instance), '*', MUST_EXIST);
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);

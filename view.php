@@ -35,14 +35,14 @@ $p  = optional_param('p', 0, PARAM_INT);
 
 if ($p) {
     if (!$externalcontent = $DB->get_record('externalcontent', array('id' => $p))) {
-        print_error('invalidaccessparameter');
+        throw new moodle_exception('invalidaccessparameter', 'error');
     }
     $cm = get_coursemodule_from_instance('externalcontent', $externalcontent->id,
                                         $externalcontent->course, false, MUST_EXIST);
 
 } else {
     if (!$cm = get_coursemodule_from_id('externalcontent', $id)) {
-        print_error('invalidcoursemodule');
+        throw new moodle_exception('invalidcoursemodule', 'error');
     }
     $externalcontent = $DB->get_record('externalcontent', array('id' => $cm->instance), '*', MUST_EXIST);
 }
@@ -91,3 +91,4 @@ if (!isset($options['printlastmodified']) || !empty($options['printlastmodified'
 }
 
 echo $OUTPUT->footer();
+
