@@ -18,7 +18,7 @@
  * Prints an instance of mod_externalcontent.
  *
  * @package     mod_externalcontent
- * @copyright   2019-2021 LushOnline
+ * @copyright   2019-2022 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -61,18 +61,38 @@ $options = empty($externalcontent->displayoptions) ? array() : unserialize($exte
 
 $PAGE->set_title($course->shortname.': '.$externalcontent->name);
 $PAGE->set_heading($course->fullname);
-$PAGE->set_activity_record($externalcontent);
 
-echo $OUTPUT->header();
-if (!isset($options['printheading']) || !empty($options['printheading'])) {
-    echo $OUTPUT->heading(format_string($externalcontent->name), 2);
+if (class_exists('core\output\activity_header')) {
+    $activityheaderconfig = [];
+    if (empty($options['printintro']) || !trim(strip_tags($externalcontent->intro))) {
+        $activityheaderconfig['description'] = '';
+    }
+    if (!$PAGE->activityheader->is_title_allowed()) {
+        $activityheader['title'] = "";
+    }
+    // Remove the activity description.
+    $PAGE->activityheader->set_attrs($activityheaderconfig);
+
+    $PAGE->add_body_class('limitedwidth');
+    echo $OUTPUT->header();
+} else {
+    $PAGE->set_activity_record($externalcontent);
+    echo $OUTPUT->header();
+    $cminfo = cm_info::create($cm);
+    $completiondetails = \core_completion\cm_completion_details::get_instance($cminfo, $USER->id);
+    $activitydates = \core\activity_dates::get_dates_for_module($cminfo, $USER->id);
+    echo $OUTPUT->activity_information($cminfo, $completiondetails, $activitydates);
 }
 
-if (!empty($options['printintro'])) {
-    if (trim(strip_tags($externalcontent->intro))) {
-        echo $OUTPUT->box_start('mod_introbox', 'externalcontentintro');
-        echo format_module_intro('externalcontent', $externalcontent, $cm->id);
-        echo $OUTPUT->box_end();
+echo $OUTPUT->box_start('', 'region-externalcontent');
+
+if (!class_exists('core\output\activity_header')) {
+    if (!empty($options['printintro'])) {
+        if (trim(strip_tags($externalcontent->intro))) {
+            echo $OUTPUT->box_start('mod_introbox', 'externalcontentintro');
+            echo format_module_intro('externalcontent', $externalcontent, $cm->id);
+            echo $OUTPUT->box_end();
+        }
     }
 }
 
@@ -89,6 +109,5 @@ if (!isset($options['printlastmodified']) || !empty($options['printlastmodified'
     $strlastmodified = get_string("lastmodified");
     echo html_writer::div("$strlastmodified: " . userdate($externalcontent->timemodified), 'modified');
 }
-
+echo $OUTPUT->box_end();
 echo $OUTPUT->footer();
-

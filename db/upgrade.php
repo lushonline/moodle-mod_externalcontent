@@ -38,11 +38,9 @@
  * before any action that may take longer time to finish.
  *
  * @package     mod_externalcontent
- * @copyright   2019-2021 LushOnline
+ * @copyright   2019-2022 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die;
 
 /**
  * xmldb_externalcontent_upgrade
@@ -50,7 +48,7 @@ defined('MOODLE_INTERNAL') || die;
  * @param  mixed $oldversion
  * @return boolean
  */
-function xmldb_externalcontent_upgrade($oldversion) {
+function xmldb_externalcontent_upgrade($oldversion = 0) {
     global $CFG;
     require_once($CFG->dirroot.'/mod/externalcontent/locallib.php');
     externalcontent_set_randomlrscredentials();

@@ -18,18 +18,15 @@
  * Library of interface functions and constants.
  *
  * @package     mod_externalcontent
- * @copyright   2019-2021 LushOnline
+ * @copyright   2019-2022 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die();
-
 
 /**
  * External content module data generator class
  *
  * @package     mod_externalcontent
- * @copyright   2019-2021 LushOnline
+ * @copyright   2019-2022 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_externalcontent_generator extends testing_module_generator {
@@ -49,9 +46,6 @@ class mod_externalcontent_generator extends testing_module_generator {
         }
         if (!isset($record->contentformat)) {
             $record->contentformat = FORMAT_MOODLE;
-        }
-        if (!isset($record->printheading)) {
-            $record->printheading = 0;
         }
         if (!isset($record->printintro)) {
             $record->printintro = 0;

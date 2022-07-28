@@ -19,11 +19,9 @@
  *
  * @package     mod_externalcontent
  * @category    backup
- * @copyright   2019-2021 LushOnline
+ * @copyright   2019-2022 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die();
 
 // For more information about the backup and restore process, please visit:
 // https://docs.moodle.org/dev/Backup_2.0_for_developers.
@@ -32,7 +30,7 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Define the complete structure for backup, with file and id annotations.
  * @package     mod_externalcontent
- * @copyright   2019-2021 LushOnline
+ * @copyright   2019-2022 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class backup_externalcontent_activity_structure_step extends backup_activity_structure_step {

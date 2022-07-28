@@ -20,7 +20,7 @@
  * Class containing a set of helpers, based on admin\tool\uploadcourse by 2013 Frédéric Massart.
  *
  * @package     mod_externalcontent
- * @copyright   2019-2021 LushOnline
+ * @copyright   2019-2022 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 defined('MOODLE_INTERNAL') || die;
@@ -39,7 +39,7 @@ use TinCan\Agent;
  * Class containing a set of helpers for using xapi data.
  *
  * @package   mod_externalcontent
- * @copyright 2019-2021 LushOnline
+ * @copyright 2019-2022 LushOnline
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class xapihelper {

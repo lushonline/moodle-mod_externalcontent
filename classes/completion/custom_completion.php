@@ -18,24 +18,17 @@
  * The mod_externalcontent module custom completion class.
  *
  * @package     mod_externalcontent
- * @copyright   2019-2021 LushOnline
+ * @copyright   2019-2022 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace mod_externalcontent\completion;
 
-defined('MOODLE_INTERNAL') || die();
-
-if (!class_exists('\core_completion\activity_custom_completion')) {
-    // New API does not exist in this site, so do nothing.
-    return;
-}
-
 /**
  * The mod_externalcontent module custom completion.
  *
  * @package     mod_externalcontent
- * @copyright   2019-2021 LushOnline
+ * @copyright   2019-2022 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class custom_completion extends \core_completion\activity_custom_completion {
@@ -47,25 +40,11 @@ class custom_completion extends \core_completion\activity_custom_completion {
      */
     public function get_state(string $rule): int {
         global $DB;
-
+        $completed = false;
         $this->validate_rule($rule);
-        // Get external content details.
-        $externalcontent = $DB->get_record('externalcontent', array('id' => $this->cm->instance), '*', MUST_EXIST);
-
-        switch ($rule) {
-            case 'completionexternally':
-                $params = array('userid' => $this->userid, 'externalcontentid' => $externalcontent->id, 'completed' => 1);
-                $completed = $DB->record_exists('externalcontent_track', $params);
-
-                $status = $completed ? COMPLETION_COMPLETE : COMPLETION_INCOMPLETE;
-                break;
-
-            default :
-                $status = COMPLETION_INCOMPLETE;
-                break;
-        }
-
-        return $status;
+        $params = array('userid' => $this->userid, 'externalcontentid' => $this->cm->instance, 'completed' => 1);
+        $completed = $DB->record_exists('externalcontent_track', $params);
+        return $completed ? COMPLETION_COMPLETE : COMPLETION_INCOMPLETE;
     }
 
     /**
@@ -83,7 +62,7 @@ class custom_completion extends \core_completion\activity_custom_completion {
      * @return array
      */
     public function get_custom_rule_descriptions(): array {
-        return ['completionexternally' => get_string('eventcompletedexternally', 'externalcontent')];
+        return ['completionexternally' => get_string('completiondetail:externally', 'externalcontent')];
     }
 
     /**

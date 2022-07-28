@@ -18,7 +18,7 @@
  * The task that provides a complete restore of mod_externalcontent is defined here.
  *
  * @package     mod_externalcontent
- * @copyright   2019-2021 LushOnline
+ * @copyright   2019-2022 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -33,7 +33,7 @@ require_once($CFG->dirroot.'/mod/externalcontent/backup/moodle2/restore_external
 /**
  * Restore task for mod_externalcontent.
  * @package     mod_externalcontent
- * @copyright   2019-2021 LushOnline
+ * @copyright   2019-2022 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class restore_externalcontent_activity_task extends restore_activity_task {

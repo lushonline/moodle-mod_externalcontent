@@ -18,7 +18,7 @@
  * Display information about all the mod_externalcontent modules in the requested course.
  *
  * @package     mod_externalcontent
- * @copyright   2019-2021 LushOnline
+ * @copyright   2019-2022 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -34,7 +34,7 @@ require_course_login($course);
 $coursecontext = context_course::instance($course->id);
 
 $event = \mod_externalcontent\event\course_module_instance_list_viewed::create(array(
-    'context' => $modulecontext
+    'context' => $coursecontext
 ));
 $event->add_record_snapshot('course', $course);
 $event->trigger();
@@ -49,7 +49,9 @@ echo $OUTPUT->header();
 $modulename       = get_string('modulename', 'externalcontent');
 $modulenameplural = get_string('modulenameplural', 'externalcontent');
 
-echo $OUTPUT->heading($modulenameplural);
+if ($CFG->branch < '400') {
+    echo $OUTPUT->heading($modulenameplural);
+}
 
 $externalcontents = get_all_instances_in_course('externalcontent', $course);
 
