@@ -109,7 +109,7 @@ function externalcontent_add_instance($moduleinstance, $mform = null) {
     $DB->set_field('course_modules', 'instance', $moduleinstance->id, array('id' => $cmid));
     $context = context_module::instance($cmid);
 
-    if ($mform and !empty($data->externalcontent['itemid'])) {
+    if ($mform && !empty($data->externalcontent['itemid'])) {
         $draftitemid = $data->externalcontent['itemid'];
         $moduleinstance->content = file_save_draft_area_files($draftitemid, $context->id, 'mod_externalcontent',
                         'content', 0, externalcontent_get_editor_options($context), $moduleinstance->content);
@@ -621,7 +621,7 @@ function externalcontent_update_grades($externalcontent, $userid = 0, $removegra
 
     if ($grades = externalcontent_get_user_grades($externalcontent, $userid)) {
         externalcontent_grade_item_update($externalcontent, $grades);
-    } else if ($userid and $removegrade) {
+    } else if ($userid && $removegrade) {
         $grade = new stdClass();
         $grade->userid   = $userid;
         $grade->rawgrade = null;

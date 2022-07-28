@@ -85,7 +85,7 @@ foreach ($externalcontents as $externalcontent) {
             format_string($externalcontent->name, true));
     }
 
-    if ($course->format == 'weeks' or $course->format == 'topics') {
+    if ($course->format == 'weeks' || $course->format == 'topics') {
         $table->data[] = array($externalcontent->section, $link);
     } else {
         $table->data[] = array($link);
