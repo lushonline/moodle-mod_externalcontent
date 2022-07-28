@@ -18,7 +18,7 @@
  * The main mod_externalcontent configuration form.
  *
  * @package     mod_externalcontent
- * @copyright   2019-2021 LushOnline
+ * @copyright   2019-2022 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -31,7 +31,7 @@ require_once($CFG->dirroot.'/mod/externalcontent/locallib.php');
  * Module instance settings form.
  *
  * @package    mod_externalcontent
- * @copyright  2019-2021 LushOnline
+ * @copyright  2019-2022 LushOnline
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_externalcontent_mod_form extends moodleform_mod {
@@ -70,8 +70,6 @@ class mod_externalcontent_mod_form extends moodleform_mod {
 
         // Add display settings.
         $mform->addElement('header', 'appearancehdr', get_string('appearance'));
-        $mform->addElement('advcheckbox', 'printheading', get_string('printheading', 'externalcontent'));
-        $mform->setDefault('printheading', $config->printheading);
         $mform->addElement('advcheckbox', 'printintro', get_string('printintro', 'externalcontent'));
         $mform->setDefault('printintro', $config->printintro);
         $mform->addElement('advcheckbox', 'printlastmodified', get_string('printlastmodified', 'externalcontent'));
@@ -106,9 +104,6 @@ class mod_externalcontent_mod_form extends moodleform_mod {
             $displayoptions = unserialize($defaultvalues['displayoptions']);
             if (isset($displayoptions['printintro'])) {
                 $defaultvalues['printintro'] = $displayoptions['printintro'];
-            }
-            if (isset($displayoptions['printheading'])) {
-                $defaultvalues['printheading'] = $displayoptions['printheading'];
             }
             if (isset($displayoptions['printlastmodified'])) {
                 $defaultvalues['printlastmodified'] = $displayoptions['printlastmodified'];

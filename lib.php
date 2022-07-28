@@ -18,11 +18,9 @@
  * Library of interface functions and constants.
  *
  * @package     mod_externalcontent
- * @copyright   2019-2021 LushOnline
+ * @copyright   2019-2022 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Return if the plugin supports $feature.
@@ -31,6 +29,11 @@ defined('MOODLE_INTERNAL') || die();
  * @return true | null True if the feature is supported, null otherwise.
  */
 function externalcontent_supports($feature) {
+    // Adding support for FEATURE_MOD_PURPOSE (MDL-71457) and providing backward compatibility (pre-v4.0).
+    if (defined('FEATURE_MOD_PURPOSE') && $feature === FEATURE_MOD_PURPOSE) {
+        return MOD_PURPOSE_CONTENT;
+    }
+
     switch ($feature) {
         case FEATURE_MOD_ARCHETYPE:
         {
@@ -91,7 +94,6 @@ function externalcontent_add_instance($moduleinstance, $mform = null) {
     $moduleinstance->timemodified = time();
 
     $displayoptions = array();
-    $displayoptions['printheading'] = $moduleinstance->printheading;
     $displayoptions['printintro']   = $moduleinstance->printintro;
     $displayoptions['printlastmodified'] = $moduleinstance->printlastmodified;
     $moduleinstance->displayoptions = serialize($displayoptions);
@@ -107,7 +109,7 @@ function externalcontent_add_instance($moduleinstance, $mform = null) {
     $DB->set_field('course_modules', 'instance', $moduleinstance->id, array('id' => $cmid));
     $context = context_module::instance($cmid);
 
-    if ($mform and !empty($data->externalcontent['itemid'])) {
+    if ($mform && !empty($data->externalcontent['itemid'])) {
         $draftitemid = $data->externalcontent['itemid'];
         $moduleinstance->content = file_save_draft_area_files($draftitemid, $context->id, 'mod_externalcontent',
                         'content', 0, externalcontent_get_editor_options($context), $moduleinstance->content);
@@ -142,7 +144,6 @@ function externalcontent_update_instance($moduleinstance) {
     $draftitemid = $moduleinstance->externalcontent['itemid'];
 
     $displayoptions = array();
-    $displayoptions['printheading'] = $moduleinstance->printheading;
     $displayoptions['printintro']   = $moduleinstance->printintro;
     $displayoptions['printlastmodified'] = $moduleinstance->printlastmodified;
     $moduleinstance->displayoptions = serialize($displayoptions);
@@ -264,48 +265,26 @@ function mod_externalcontent_core_calendar_provide_event_action(calendar_event $
  */
 function externalcontent_get_coursemodule_info($coursemodule) {
     global $CFG, $DB;
-    require_once("$CFG->libdir/resourcelib.php");
 
-    if (!$externalcontent = $DB->get_record('externalcontent', array('id' => $coursemodule->instance),
-            'id, name, intro, introformat')) {
-        return null;
+    $dbparams = ['id' => $coursemodule->instance];
+    $fields = 'id, name, intro, introformat, completionexternally';
+    if (!$externalcontent = $DB->get_record('externalcontent', $dbparams, $fields)) {
+        return false;
     }
 
     $info = new cached_cm_info();
     $info->name = $externalcontent->name;
+
+    // Populate the custom completion rules as key => value pairs, but only if the completion mode is 'automatic'.
+    if ($coursemodule->completion == COMPLETION_TRACKING_AUTOMATIC) {
+        $info->customdata['customcompletionrules']['completionexternally'] = $externalcontent->completionexternally;
+    }
 
     if ($coursemodule->showdescription) {
         // Convert intro to html. Do not filter cached version, filters run at display time.
         $info->content = format_module_intro('externalcontent', $externalcontent, $coursemodule->id, false);
     }
     return $info;
-}
-
-/**
- * Obtains the automatic completion state for this externalcontent based on any conditions
- * in externalcontent settings.
- *
- * @param object $course Course
- * @param object $cm Course-module
- * @param int $userid User ID
- * @param bool $type Type of comparison (or/and; can be used as return value if no conditions)
- * @return bool True if completed, false if not. (If no conditions, then return
- *   value depends on comparison type)
- */
-function externalcontent_get_completion_state($course, $cm, $userid, $type) {
-    global $DB;
-    // Get external content details.
-    $externalcontent = $DB->get_record('externalcontent', array('id' => $cm->instance), '*', MUST_EXIST);
-
-    if (!$externalcontent->completionexternally) {
-        // Completion option is not enabled so just return $type.
-        return $type;
-    } else {
-        $params = array('userid' => $userid, 'externalcontentid' => $externalcontent->id, 'completed' => 1);
-        $completed = $DB->record_exists('externalcontent_track', $params);
-
-        return $completed;
-    }
 }
 
 /**
@@ -506,6 +485,9 @@ function externalcontent_update_completion_state($course, $cm, $context = null, 
         }
     }
 
+    externalcontent_grade_item_update($externalcontent);
+    externalcontent_update_grades($externalcontent);
+
     $response->status = $response->completionupdated || $response->scoreupdated || $response->viewedupdated;
     $response->message = trim($response->message);
     return $response;
@@ -639,7 +621,7 @@ function externalcontent_update_grades($externalcontent, $userid = 0, $removegra
 
     if ($grades = externalcontent_get_user_grades($externalcontent, $userid)) {
         externalcontent_grade_item_update($externalcontent, $grades);
-    } else if ($userid and $removegrade) {
+    } else if ($userid && $removegrade) {
         $grade = new stdClass();
         $grade->userid   = $userid;
         $grade->rawgrade = null;
@@ -647,4 +629,32 @@ function externalcontent_update_grades($externalcontent, $userid = 0, $removegra
     } else {
         externalcontent_grade_item_update($externalcontent);
     }
+}
+
+/**
+ * Callback which returns human-readable strings describing the active completion custom rules for the module instance.
+ *
+ * @param cm_info|stdClass $cm object with fields ->completion and ->customdata['customcompletionrules']
+ * @return array $descriptions the array of descriptions for the custom rules.
+ */
+function mod_externalcontent_get_completion_active_rule_descriptions($cm) {
+    // Values will be present in cm_info, and we assume these are up to date.
+    if (empty($cm->customdata['customcompletionrules'])
+        || $cm->completion != COMPLETION_TRACKING_AUTOMATIC) {
+        return [];
+    }
+
+    $descriptions = [];
+    foreach ($cm->customdata['customcompletionrules'] as $key => $val) {
+        switch ($key) {
+            case 'completionexternally':
+                if (!empty($val)) {
+                    $descriptions[] = get_string('completionexternally', 'externalcontent');
+                }
+                break;
+            default:
+                break;
+        }
+    }
+    return $descriptions;
 }

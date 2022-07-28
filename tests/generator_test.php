@@ -18,20 +18,25 @@
  * Library of interface functions and constants.
  *
  * @package     mod_externalcontent
- * @copyright   2019-2021 LushOnline
+ * @copyright   2019-2022 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-defined('MOODLE_INTERNAL') || die();
-
+namespace mod_externalcontent;
 
 /**
  * PHPUnit data generator testcase
  *
  * @package     mod_externalcontent
- * @copyright   2019-2021 LushOnline
+ * @copyright   2019-2022 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @covers \mod_externalcontent_generator
  */
-class mod_externalcontent_generator_testcase extends advanced_testcase {
+class generator_test extends \advanced_testcase {
+    /**
+     * Test generator can create externalcontent activities
+     * @return void
+     * @covers \mod_externalcontent_generator::create_instance
+     */
     public function test_generator() {
         global $DB, $SITE;
 
@@ -54,7 +59,7 @@ class mod_externalcontent_generator_testcase extends advanced_testcase {
         $this->assertEquals('externalcontent', $cm->modname);
         $this->assertEquals($SITE->id, $cm->course);
 
-        $context = context_module::instance($cm->id);
+        $context = \context_module::instance($cm->id);
         $this->assertEquals($externalcontent->cmid, $context->instanceid);
     }
 }

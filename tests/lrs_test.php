@@ -19,9 +19,10 @@
  *
  * @package     mod_externalcontent
  * @category    external
- * @copyright   2019-2021 LushOnline
+ * @copyright   2019-2022 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+namespace mod_externalcontent;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -36,10 +37,12 @@ require($CFG->dirroot . '/mod/externalcontent/lrs/xapihelper.php');
  *
  * @package     mod_externalcontent
  * @category    external
- * @copyright   2019-2021 LushOnline
+ * @copyright   2019-2022 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @covers \xapihelper
+ * @uses \TinCan\Statement
  */
-class mod_externalcontent_lrs_testcase extends advanced_testcase {
+class lrs_test extends \advanced_testcase {
 
     /**
      * Return an incomplete xapi statement
@@ -77,7 +80,7 @@ class mod_externalcontent_lrs_testcase extends advanced_testcase {
                 'objectType' => 'Activity',
             ],
         ];
-        return new TinCan\Statement($incomplete);
+        return new \TinCan\Statement($incomplete);
     }
 
     /**
@@ -120,7 +123,7 @@ class mod_externalcontent_lrs_testcase extends advanced_testcase {
                 'objectType' => 'Activity',
             ],
         ];
-        return new TinCan\Statement($complete);
+        return new \TinCan\Statement($complete);
     }
 
     /**
@@ -166,7 +169,7 @@ class mod_externalcontent_lrs_testcase extends advanced_testcase {
                 'objectType' => 'Activity',
             ],
         ];
-        return new TinCan\Statement($scored);
+        return new \TinCan\Statement($scored);
     }
 
     /**
@@ -196,20 +199,20 @@ class mod_externalcontent_lrs_testcase extends advanced_testcase {
 
         // Filter for course_module_viewed.
         $moduleviewedevents = array_filter($events, function($k) {
-            return $k instanceof mod_externalcontent\event\course_module_viewed;
+            return $k instanceof \mod_externalcontent\event\course_module_viewed;
         });
         $lrsevents->viewed = $moduleviewedevents;
 
         // Filter for course_module_scoredexternally.
         $modulescoredevents = array_filter($events, function($k) {
-            return $k instanceof mod_externalcontent\event\course_module_scoredexternally;
+            return $k instanceof \mod_externalcontent\event\course_module_scoredexternally;
         });
         $lrsevents->scored = $modulescoredevents;
 
-        $modulecompletedevents = array_filter($events, function($k) {
-            return $k instanceof mod_externalcontent\event\course_module_completedexternally;
+        $completedevents = array_filter($events, function($k) {
+            return $k instanceof \mod_externalcontent\event\course_module_completedexternally;
         });
-        $lrsevents->completed = $modulecompletedevents;
+        $lrsevents->completed = $completedevents;
         return $lrsevents;
     }
 
@@ -239,20 +242,21 @@ class mod_externalcontent_lrs_testcase extends advanced_testcase {
                                     'completionexternally' => 1),
                               array('completion' => 2, 'completionview' => 1) );
 
-        $this->context = context_module::instance($this->externalcontent->cmid);
+        $this->context = \context_module::instance($this->externalcontent->cmid);
         $this->cm = get_coursemodule_from_instance('externalcontent', $this->externalcontent->id);
     }
 
     /**
      * Test course and module viewed only
      * @return void
+     * @covers \xapihelper::processstatement
      */
     public function test_externalcontent_lrs_xapihelper_processstatement_viewed() {
         // Trigger and capture the event.
         $sink = $this->redirectEvents();
 
         $statement = self::get_incomplete_statement($this->user->username, $this->xapiactivityid);
-        $payload = xapihelper::processstatement('1.0.0', $statement, true);
+        $payload = \xapihelper::processstatement('1.0.0', $statement, true);
 
         $events = $sink->get_events();
 
@@ -273,13 +277,14 @@ class mod_externalcontent_lrs_testcase extends advanced_testcase {
     /**
      * Test course and module scored
      * @return void
+     * @covers \xapihelper::processstatement
      */
     public function test_externalcontent_lrs_xapihelper_processstatement_scored() {
         // Trigger and capture the event.
         $sink = $this->redirectEvents();
 
         $statement = self::get_scored_statement($this->user->username, $this->xapiactivityid);
-        $payload = xapihelper::processstatement('1.0.0', $statement, true);
+        $payload = \xapihelper::processstatement('1.0.0', $statement, true);
 
         $events = $sink->get_events();
 
@@ -302,13 +307,14 @@ class mod_externalcontent_lrs_testcase extends advanced_testcase {
     /**
      * Test course and module completed
      * @return void
+     * @covers \xapihelper::processstatement
      */
     public function test_externalcontent_lrs_xapihelper_processstatement_completed() {
         // Trigger and capture the event.
         $sink = $this->redirectEvents();
 
         $statement = self::get_completed_statement($this->user->username, $this->xapiactivityid);
-        $payload = xapihelper::processstatement('1.0.0', $statement, true);
+        $payload = \xapihelper::processstatement('1.0.0', $statement, true);
 
         $events = $sink->get_events();
 
@@ -331,10 +337,11 @@ class mod_externalcontent_lrs_testcase extends advanced_testcase {
     /**
      * Test that activity id lookup not matching course module doesnt generate error
      * @return void
+     * @covers \xapihelper::processstatement
      */
     public function test_externalcontent_lrs_xapihelper_processstatement_noactivitymatch() {
         $statement = self::get_completed_statement($this->user->username, $this->xapiactivityid.'1');
-        $payload = xapihelper::processstatement('1.0.0', $statement, true);
+        $payload = \xapihelper::processstatement('1.0.0', $statement, true);
 
         // Checking that course is empty.
         $this->assertEmpty($payload->cm);
@@ -346,10 +353,11 @@ class mod_externalcontent_lrs_testcase extends advanced_testcase {
     /**
      * Test that username lookup failing doesnt generate error
      * @return void
+     * @covers \xapihelper::processstatement
      */
     public function test_externalcontent_lrs_xapihelper_processstatement_nousermatch() {
         $statement = self::get_completed_statement($this->user->username.'1', $this->xapiactivityid);
-        $payload = xapihelper::processstatement('1.0.0', $statement, true);
+        $payload = \xapihelper::processstatement('1.0.0', $statement, true);
 
         // Checking that user is empty.
         $this->assertEmpty($payload->user);

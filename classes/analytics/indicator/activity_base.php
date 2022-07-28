@@ -18,19 +18,17 @@
  * Activity base class.
  *
  * @package     mod_externalcontent
- * @copyright   2019-2021 LushOnline
+ * @copyright   2019-2022 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace mod_externalcontent\analytics\indicator;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Activity base class.
  *
  * @package     mod_externalcontent
- * @copyright   2019-2021 LushOnline
+ * @copyright   2019-2022 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 abstract class activity_base extends \core_analytics\local\indicator\community_of_inquiry_activity {

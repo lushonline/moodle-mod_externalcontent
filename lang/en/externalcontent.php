@@ -19,7 +19,7 @@
  *
  * @package     mod_externalcontent
  * @category    string
- * @copyright   2019-2021 LushOnline
+ * @copyright   2019-2022 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -51,8 +51,6 @@ $string['externalcontent:addinstance'] = 'Add a new External content resource';
 $string['externalcontent:view'] = 'View External content content';
 $string['externalcontent:viewreports'] = 'View External content reports';
 $string['pluginadministration'] = 'External content module administration';
-$string['printheading'] = 'Display External content name';
-$string['printheadingexplain'] = 'Display External content name above content?';
 $string['printintro'] = 'Display External content description';
 $string['printintroexplain'] = 'Display External content description above content?';
 $string['printlastmodified'] = 'Display last modified date';
@@ -70,6 +68,11 @@ $string['xapiusernameexplain'] = 'The username for the xAPI functionality.';
 $string['xapipassword'] = 'xAPI LRS Password';
 $string['xapipasswordexplain'] = 'The password for the xAPI functionality.';
 
+$string['xapiurl'] = 'xAPI LRS URL';
+$string['xapiurlintro'] = 'The path to use when configuring the xAPI Activity Provider that will send statements to this xAPI LRS is:
+
+{$a}';
+
 $string['report'] = 'External content report';
 $string['summary'] = 'Summary';
 
@@ -80,3 +83,4 @@ $string['eventscoredexternally'] = 'Scored externally';
 $string['eventscoredexternallydesc'] = 'The user with id {$a->userid} received a score {$a->score} from external source for the external content with course module id {$a->contextinstanceid}.';
 
 $string['completionexternally'] = 'Student must be marked completed by external feed.';
+$string['completiondetail:externally'] = 'Complete content externally';

@@ -18,7 +18,7 @@
  * Basic LRS functionality to allow
  *
  * @package     mod_externalcontent
- * @copyright   2019-2021 LushOnline
+ * @copyright   2019-2022 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 defined('MOODLE_INTERNAL') || die;
@@ -35,11 +35,10 @@ use TinCan\Agent;
  * Class containing controllers for statements
  *
  * @package   mod_externalcontent
- * @copyright 2019-2021 LushOnline
+ * @copyright 2019-2022 LushOnline
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class StatementController
-{
+class StatementController {
     /**
      * container
      *
@@ -116,6 +115,30 @@ class StatementController
         return $options['boundary'];
     }
 
+    /**
+     * Gets the JSON from multipart/mixed body
+     *
+     * @param string $boundary The multipart boundary
+     * @param string $rawbody The rawbody of the request
+     *
+     * @return string
+     */
+    private function getjsonbodyfrommixed($boundary, $rawbody) {
+        $text = "";
+        if (isset($boundary) && !empty($boundary)) {
+            $boundary = '--' .trim($boundary);
+            $requestsegments = explode($boundary, $rawbody);
+            foreach ($requestsegments as $segment) {
+                if (!empty(trim($segment))) {
+                    $endheaders = strpos($segment, "\r\n\r\n", 4);
+                    $startcontent = $endheaders + 4;
+                    $text = substr($segment, $startcontent);
+                    break;
+                }
+            }
+        }
+        return trim($text);
+    }
 
     /**
      * Process inbound xAPI statements
@@ -143,20 +166,7 @@ class StatementController
             // Get the json from the multipart/mixed.
             $boundary = self::getboundary($contenttype);
             $rawbody = $request->getBody()->getContents();
-            $text = "";
-            if (isset($boundary) && !empty($boundary)) {
-                $boundary = '--' .trim($boundary);
-                $requestsegments = explode($boundary, $rawbody);
-                foreach ($requestsegments as $segment) {
-                    if (!empty(trim($segment))) {
-                        $endheaders = strpos($segment, "\r\n\r\n", 4);
-                        $startcontent = $endheaders + 4;
-                        $text = substr($segment, $startcontent);
-                        break;
-                    }
-                }
-            }
-            $body = trim($text);
+            $body = self::getjsonbodyfrommixed($boundary, $rawbody);
         }
 
         $xapiversion = $request->getHeaderLine('X-Experience-API-Version');
@@ -167,18 +177,12 @@ class StatementController
 
         $receivedstatements = json_decode($body);
 
-        if (is_array($receivedstatements)) {
-            $statements = $receivedstatements;
-        } else {
-            array_push($statements, $receivedstatements);
-        }
+        is_array($receivedstatements) ? $statements = $receivedstatements : array_push($statements, $receivedstatements);
 
         foreach ($statements as $statement) {
             $payload = xapihelper::processstatement($xapiversion ? $xapiversion : '1.0.0',
                                                     new Statement(json_decode(json_encode($statement), true)));
-            if ($debug) {
-                array_push($payloads, $payload);
-            }
+            array_push($payloads, $payload);
             array_push($statementids, $payload->statementId);
         }
 

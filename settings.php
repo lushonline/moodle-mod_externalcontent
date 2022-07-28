@@ -18,7 +18,7 @@
  * Plugin administration pages are defined here.
  *
  * @package     mod_externalcontent
- * @copyright   2019-2021 LushOnline
+ * @copyright   2019-2022 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -29,8 +29,6 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_heading('externalcontentmodeditdefaults', get_string('modeditdefaults', 'admin'),
                         get_string('condifmodeditdefaults', 'admin')));
 
-    $settings->add(new admin_setting_configcheckbox('externalcontent/printheading',
-        get_string('printheading', 'externalcontent'), get_string('printheadingexplain', 'externalcontent'), 0));
     $settings->add(new admin_setting_configcheckbox('externalcontent/printintro',
         get_string('printintro', 'externalcontent'), get_string('printintroexplain', 'externalcontent'), 0));
     $settings->add(new admin_setting_configcheckbox('externalcontent/printlastmodified',
@@ -53,4 +51,11 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configtext('externalcontent/xapicompletionverbs',
         get_string('xapicompletionverbs', 'externalcontent'), get_string('xapicompletionverbsexplain', 'externalcontent'),
         'http://adlnet.gov/expapi/verbs/completed,http://adlnet.gov/expapi/verbs/passed'));
+
+    $settings->add(new admin_setting_heading('externalcontent/xapiurlsetting',
+        get_string('xapiurl', 'externalcontent'), ''));
+
+    $xapiurl = new moodle_url('/mod/externalcontent/lrs/index.php');
+    $settings->add(new admin_setting_heading('externalcontent/xapiurl', '',
+                    get_string('xapiurlintro', 'externalcontent', $xapiurl.'')));
 }

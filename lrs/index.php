@@ -18,7 +18,7 @@
  * Basic LRS functionality to allow
  *
  * @package     mod_externalcontent
- * @copyright   2019-2021 LushOnline
+ * @copyright   2019-2022 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 define('NO_MOODLE_COOKIES', true);

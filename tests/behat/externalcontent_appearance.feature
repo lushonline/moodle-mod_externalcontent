@@ -6,57 +6,23 @@ Feature: Configure externalcontent appearance
 
   Background:
     Given the following "courses" exist:
-      | shortname | fullname   |
+      | shortname | fullname |
       | C1        | Course 1 |
     And the following "activities" exist:
-      | activity | name       | intro      | course | idnumber |
-      | externalcontent     | ExternalContentName1  | ExternalContentDesc1  | C1     | EXTERNALCONTENT1    |
-    And I log in as "admin"
+      | activity        | name                 | intro                | course | idnumber         |
+      | externalcontent | ExternalContentName1 | ExternalContentDesc1 | C1     | EXTERNALCONTENT1 |
 
   @javascript
-  Scenario: Display and hide the external content name
-    Given I am on "Course 1" course homepage
-    When I follow "ExternalContentName1"
-    Then I should not see "ExternalContentName1" in the "region-main" "region"
-    And I navigate to "Edit settings" in current page administration
-    And I follow "Appearance"
-    When I click on "Display External content name" "checkbox"
+  Scenario Outline: Hide and display page features
+    Given I am on the "ExternalContentName1" "externalcontent activity editing" page logged in as admin
+    And I expand all fieldsets
+    And I set the field "<feature>" to "<value>"
     And I press "Save and display"
-    Then I should see "ExternalContentName1" in the "region-main" "region"
-    And I navigate to "Edit settings" in current page administration
-    And I follow "Appearance"
-    When I click on "Display External content name" "checkbox"
-    And I press "Save and display"
-    Then I should not see "ExternalContentName1" in the "region-main" "region"
+    Then I <shouldornot> see "<lookfor>" in the "region-main" "region"
 
-  @javascript
-  Scenario: Display and hide the external content description
-    Given I am on "Course 1" course homepage
-    When I follow "ExternalContentName1"
-    Then I should not see "ExternalContentDesc1" in the "region-main" "region"
-    And I navigate to "Edit settings" in current page administration
-    And I follow "Appearance"
-    When I click on "Display External content description" "checkbox"
-    And I press "Save and display"
-    Then I should see "ExternalContentDesc1" in the "region-main" "region"
-    And I navigate to "Edit settings" in current page administration
-    And I follow "Appearance"
-    When I click on "Display External content description" "checkbox"
-    And I press "Save and display"
-    Then I should not see "ExternalContentDesc1" in the "region-main" "region"
-
-  @javascript
-  Scenario: Display and hide the last modified date
-    Given I am on "Course 1" course homepage
-    When I follow "ExternalContentName1"
-    Then I should see "Last modified:" in the "region-main" "region"
-    And I navigate to "Edit settings" in current page administration
-    And I follow "Appearance"
-    When I click on "Display last modified date" "checkbox"
-    And I press "Save and display"
-    Then I should not see "Last modified:" in the "region-main" "region"
-    And I navigate to "Edit settings" in current page administration
-    And I follow "Appearance"
-    When I click on "Display last modified date" "checkbox"
-    And I press "Save and display"
-    Then I should see "Last modified:" in the "region-main" "region"
+    Examples:
+      | feature                              | lookfor              | value | shouldornot |
+      | Display External content description | ExternalContentDesc1 | 1     | should      |
+      | Display External content description | ExternalContentDesc1 | 0     | should not  |
+      | Display last modified date           | Last modified:       | 1     | should      |
+      | Display last modified date           | Last modified:       | 0     | should not  |
