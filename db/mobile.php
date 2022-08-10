@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Plugin version and other meta-data are defined here.
+ * Declares the Mobile App addons provided by this plugin.
  *
  * @package     mod_externalcontent
  * @copyright   2019-2022 LushOnline
@@ -24,8 +24,24 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2022072802;
-$plugin->requires = 2021051700; // Requires this Moodle version v3.11 see https://docs.moodle.org/dev/Releases.
-$plugin->component = 'mod_externalcontent';
-$plugin->maturity = MATURITY_STABLE;
-$plugin->release = '1.9';
+$addons = [
+    'mod_externalcontent' => [
+        'handlers' => [
+            'externalcontent' => [
+                'displaydata' => [
+                    'icon' => $CFG->wwwroot . '/mod/externalcontent/pix/icon.svg',
+                    'class' => '',
+                ],
+                'delegate' => 'CoreCourseModuleDelegate',
+                'method' => 'mobile_course_view',
+                'coursepagemethod' => 'mobile_course_view',
+                'offlinefunctions' => [
+                    'mobile_course_view' => [],
+                ],
+            ],
+        ],
+        'lang' => [
+            ['pluginname', 'externalcontent'],
+        ],
+    ],
+];

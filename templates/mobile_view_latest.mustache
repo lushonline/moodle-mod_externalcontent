@@ -1,0 +1,53 @@
+{{!
+    This file is part of Moodle - https://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template mod_externalcontent/mobile_view_latest
+
+    Render the main view for the mobile app.
+
+    Classes required for JS:
+    * none
+
+    Data attributes required for JS:
+    * none
+
+    Context variables required for this template:
+    * cmid - [int] Course module identifier.
+    * courseid - [int] Course identifier.
+    * instance - [object] Externalcontent object.
+    * instance.id - [int] Identifier.
+    * instance.intro - [string] Formatted activity description.
+    * instance.content - [string] Formatted content.
+
+    Example context (json):
+    {
+        "cmid": 3,
+        "courseid": 3,
+        "instance": {
+            "id": 1,
+            "intro": "Language: en-US<br>Type: Book<br>Author: Suchi Paharia, Sudhanshu Hate<br>Publisher: CRC Press<br>Copyright: 2012<br>ISBN: 9781439862933<br><br>Detailing a step-by-step approach for real-life implementation, this book supplies in-depth coverage of the various server-side features of Microsoft .NET Framework 4 that can be leveraged in Enterprise Application development.<br>",
+            "content": "<a href=\"https:\/\/share.percipio.com\/cd\/cvm9KtF3M8jM\" target=\"_blank\"><img src=\"https:\/\/cdn2.percipio.com\/public\/c\/books\/46427\/cover-images\/262cd6b1-84b9-4e4b-a294-99b4730f960a\/modality\/262cd6b1-84b9-4e4b-a294-99b4730f960a.jpg\" alt=\".NET 4 for Enterprise Architects and Developers\" style=\"max-width: 400px\" class=\"img-responsive\"><\/a><br><br>Language: en-US<br>Type: Book<br>Author: Suchi Paharia, Sudhanshu Hate<br>Publisher: CRC Press<br>Copyright: 2012<br>ISBN: 9781439862933<br><br>Detailing a step-by-step approach for real-life implementation, this book supplies in-depth coverage of the various server-side features of Microsoft .NET Framework 4 that can be leveraged in Enterprise Application development.<br><br><br><a href=\"https:\/\/share.percipio.com\/cd\/cvm9KtF3M8jM\" target=\"_blank\" class=\"btn btn-primary\">Launch<\/a>"
+        }
+    }
+}}
+{{#instance}}
+    <ion-card>
+        <ion-card-content>
+            <ion-label>{{{ content }}}</ion-label>
+        </ion-card-content>
+    </ion-card>
+{{/instance}}
