@@ -35,69 +35,63 @@ require_once($CFG->dirroot . '/mod/externalcontent/lib.php');
  * @copyright   2019-2022 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class mobile
-{
+class mobile {
 
-  /**
-   * Return the data for the CoreCourseModuleDelegate delegate.
-   *
-   * @param object $args
-   * @return array       HTML, javascript and otherdata
-   * @throws \required_capability_exception
-   * @throws \coding_exception
-   * @throws \require_login_exception
-   * @throws \moodle_exception
-   */
-  public static function mobile_course_view($args)
-  {
-    global $OUTPUT, $DB;
+    /**
+     * Return the data for the CoreCourseModuleDelegate delegate.
+     *
+     * @param object $args
+     * @return array       HTML, javascript and otherdata
+     * @throws \required_capability_exception
+     * @throws \coding_exception
+     * @throws \require_login_exception
+     * @throws \moodle_exception
+     */
+    public static function mobile_course_view($args) {
+        global $OUTPUT, $DB;
 
+        $args = (object) $args;
+        $versionname = $args->appversioncode >= 3950 ? 'latest' : 'ionic3';
+        $cm = get_coursemodule_from_id('externalcontent', $args->cmid);
 
-    $args = (object) $args;
-    $versionname = $args->appversioncode >= 3950 ? 'latest' : 'ionic3';
-    $cm = get_coursemodule_from_id('externalcontent', $args->cmid);
+        require_login($args->courseid, false, $cm, true, true);
 
-    require_login($args->courseid, false, $cm, true, true);
+        $context = \context_module::instance($cm->id);
+        require_capability('mod/externalcontent:view', $context);
 
-    $context = \context_module::instance($cm->id);
-    require_capability('mod/externalcontent:view', $context);
+        $externalcontent = $DB->get_record('externalcontent', array('id' => $cm->instance));
+        $course = get_course($cm->course);
 
-    $externalcontent = $DB->get_record('externalcontent', array('id' => $cm->instance));
-    $course = get_course($cm->course);
+        // Mark the externalcontent as viewed.
+        externalcontent_view($externalcontent, $course, $cm, $context);
 
-    // Mark the externalcontent as viewed.
-    externalcontent_view($externalcontent, $course, $cm, $context);
+        // Pre-format some strings for mobile app.
+        $externalcontent->name = format_string($externalcontent->name);
+        list($externalcontent->content, $externalcontent->contentformat) =
+          external_format_text(
+            $externalcontent->content,
+            $externalcontent->contentformat,
+            $context->id,
+            'mod_externalcontent',
+            'content'
+          );
 
-    // Pre-format some strings for mobile app
-    $externalcontent->name = format_string($externalcontent->name);
-    list($externalcontent->content, $externalcontent->contentformat) =
-      external_format_text(
-        $externalcontent->content,
-        $externalcontent->contentformat,
-        $context->id,
-        'mod_externalcontent',
-        'content'
-      );
+        $data = [
+          'cmid' => $cm->id,
+          'courseid' => $course->id,
+          'instance' => $externalcontent
+        ];
 
-
-    $data = [
-      'cmid' => $cm->id,
-      'courseid' => $course->id,
-      'instance' => $externalcontent
-    ];
-
-    //
-
-    return [
-      'templates' => [
-        [
-          'id' => 'main',
-          'html' => $OUTPUT->render_from_template('mod_externalcontent/mobile_view_' . $versionname, $data),
-        ],
-      ],
-      'javascript' => '',
-      'otherdata' => '',
-      'files' => [],
-    ];
-  }
+        return [
+          'templates' => [
+            [
+              'id' => 'main',
+              'html' => $OUTPUT->render_from_template('mod_externalcontent/mobile_view_' . $versionname, $data),
+            ],
+          ],
+          'javascript' => '',
+          'otherdata' => '',
+          'files' => [],
+        ];
+    }
 }
