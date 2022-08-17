@@ -64,9 +64,11 @@ class AboutController {
      * @return object the response object
      */
     public function about(Request $request, Response $response, array $args) {
-        $message = 'Credentials invalid for this endpoint.';
         if (!$this->enabled) {
-            $message = 'xAPI not enabled.';
+            return $response
+                ->withStatus(401)
+                ->withAddedHeader('Content-Type', 'text/plain')
+                ->write('xAPI not enabled.');
         }
 
         $versions = array();
