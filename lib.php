@@ -29,49 +29,29 @@
  * @return true | null True if the feature is supported, null otherwise.
  */
 function externalcontent_supports($feature) {
+    if (!$feature) {
+        return null;
+    }
+    $features = [
+        FEATURE_BACKUP_MOODLE2 => true,
+        FEATURE_COMPLETION_TRACKS_VIEWS => true,
+        FEATURE_COMPLETION_HAS_RULES => true,
+        FEATURE_GRADE_HAS_GRADE => false,
+        FEATURE_GRADE_OUTCOMES => false,
+        FEATURE_MOD_ARCHETYPE => MOD_ARCHETYPE_RESOURCE,
+        FEATURE_MOD_INTRO => true,
+        FEATURE_SHOW_DESCRIPTION => true
+    ];
+
     // Adding support for FEATURE_MOD_PURPOSE (MDL-71457) and providing backward compatibility (pre-v4.0).
-    if (defined('FEATURE_MOD_PURPOSE') && $feature === FEATURE_MOD_PURPOSE) {
-        return MOD_PURPOSE_CONTENT;
+    if (defined('FEATURE_MOD_PURPOSE')) {
+        $features['FEATURE_MOD_PURPOSE'] = MOD_PURPOSE_CONTENT;
     }
 
-    switch ($feature) {
-        case FEATURE_MOD_ARCHETYPE:
-        {
-            return MOD_ARCHETYPE_RESOURCE;
-        }
-        case FEATURE_COMPLETION_TRACKS_VIEWS:
-        {
-            return true;
-        }
-        case FEATURE_COMPLETION_HAS_RULES:
-        {
-            return true;
-        }
-        case FEATURE_GRADE_HAS_GRADE:
-        {
-            return false;
-        }
-        case FEATURE_GRADE_OUTCOMES:
-        {
-            return false;
-        }
-        case FEATURE_MOD_INTRO:
-        {
-            return true;
-        }
-        case FEATURE_BACKUP_MOODLE2:
-        {
-            return true;
-        }
-        case FEATURE_SHOW_DESCRIPTION:
-        {
-            return true;
-        }
-        default:
-        {
-            return null;
-        }
+    if (isset($features[(string) $feature])) {
+        return $features[$feature];
     }
+    return null;
 }
 
 /**
@@ -264,7 +244,7 @@ function mod_externalcontent_core_calendar_provide_event_action(calendar_event $
  * @return cached_cm_info Info to customise main page display
  */
 function externalcontent_get_coursemodule_info($coursemodule) {
-    global $CFG, $DB;
+    global $DB;
 
     $dbparams = ['id' => $coursemodule->instance];
     $fields = 'id, name, intro, introformat, completionexternally';
@@ -613,21 +593,33 @@ function externalcontent_grade_item_update($externalcontent, $grades = null) {
  *
  * @param int $externalcontent The externalcontent object
  * @param int $userid optional user id, 0 means all users
- * @param bool $removegrade optional null the score rawgrade
  */
-function externalcontent_update_grades($externalcontent, $userid = 0, $removegrade = true) {
+function externalcontent_update_grades($externalcontent, $userid = 0) {
     global $CFG;
     require_once($CFG->libdir.'/gradelib.php');
 
     if ($grades = externalcontent_get_user_grades($externalcontent, $userid)) {
         externalcontent_grade_item_update($externalcontent, $grades);
-    } else if ($userid && $removegrade) {
+    } else {
+        externalcontent_grade_item_update($externalcontent);
+    }
+}
+
+/**
+ * externalcontent_remove_grades
+ *
+ * @param int $externalcontent The externalcontent object
+ * @param int $userid optional user id, 0 means all users
+ */
+function externalcontent_remove_grades($externalcontent, $userid = 0) {
+    global $CFG;
+    require_once($CFG->libdir.'/gradelib.php');
+
+    if ($userid) {
         $grade = new stdClass();
         $grade->userid   = $userid;
         $grade->rawgrade = null;
         externalcontent_grade_item_update($externalcontent, $grade);
-    } else {
-        externalcontent_grade_item_update($externalcontent);
     }
 }
 

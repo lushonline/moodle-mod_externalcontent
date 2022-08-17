@@ -27,12 +27,6 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot.'/mod/externalcontent/lib.php');
 require_once($CFG->libdir.'/resourcelib.php');
 
-/** LRS Statement Processing Errors */
-define('EXTERNALCONTENT_LRS_NO_ERROR', 0);
-define('EXTERNALCONTENT_LRS_COURSE_NOT_FOUND', 1);
-define('EXTERNALCONTENT_LRS_COURSEMODULE_NOT_FOUND', 2);
-define('EXTERNALCONTENT_LRS_USER_NOT_FOUND', 3);
-
 /**
  * This function checks if an xapi password has been generated for this site.
  *
@@ -40,31 +34,11 @@ define('EXTERNALCONTENT_LRS_USER_NOT_FOUND', 3);
  * extension is not installed or configured properly it returns a random string.
  *
  * @return void;
+ * @deprecated since 2022081001
  */
 function externalcontent_set_randomlrscredentials() {
-    $username = get_config('externalcontent', 'xapidefaultusername');
-
-    // If we already generated a valid key, no need to check.
-    if (empty($username)) {
-        $randomusername = substr(
-                            str_shuffle(
-                                str_repeat('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil(24 / 62))
-                            ), 1, 24
-                        );
-        set_config('xapidefaultusername', $randomusername, 'externalcontent');
-    }
-
-    $password = get_config('externalcontent', 'xapidefaultpassword');
-
-    // If we already generated a valid key, no need to check.
-    if (empty($password)) {
-        $randompassword = substr(
-                            str_shuffle(
-                                str_repeat('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil(24 / 62))
-                            ), 1, 24
-                        );
-        set_config('xapidefaultpassword', $randompassword, 'externalcontent');
-    }
+    debugging('externalcontent_set_randomlrscredentials() is deprecated,
+               please use \mod_externalcontent\plugin::set_randomlrscredentials() instead.', DEBUG_DEVELOPER);
 }
 
 /**

@@ -51,6 +51,6 @@
 function xmldb_externalcontent_upgrade($oldversion = 0) {
     global $CFG;
     require_once($CFG->dirroot.'/mod/externalcontent/locallib.php');
-    externalcontent_set_randomlrscredentials();
+    \mod_externalcontent\plugin::set_randomlrscredentials();
     return true;
 }

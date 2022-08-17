@@ -27,13 +27,19 @@ defined('MOODLE_INTERNAL') || die;
 
 global $CFG;
 require_once($CFG->dirroot.'/mod/externalcontent/lib.php');
-require_once($CFG->dirroot.'/mod/externalcontent/locallib.php');
 require_once($CFG->libdir.'/completionlib.php');
 require_once($CFG->libdir.'/enrollib.php');
 require_once($CFG->dirroot.'/course/lib.php');
 require($CFG->dirroot.'/mod/externalcontent/lrs/vendor/autoload.php');
 use TinCan\Statement;
 use TinCan\Agent;
+use mod_externalcontent\instance;
+
+/** LRS Statement Processing Errors */
+define('EXTERNALCONTENT_LRS_NO_ERROR', 0);
+define('EXTERNALCONTENT_LRS_COURSE_NOT_FOUND', 1);
+define('EXTERNALCONTENT_LRS_COURSEMODULE_NOT_FOUND', 2);
+define('EXTERNALCONTENT_LRS_USER_NOT_FOUND', 3);
 
 /**
  * Class containing a set of helpers for using xapi data.
@@ -82,9 +88,9 @@ class xapihelper {
 
         // Retrieve the course module that has the specified object id as its idnumber.
         // Moodle prevents duplicate idnumbers.
-        if ($cm = self::get_cm_by_idnumber($payload->object)) {
-            $payload->cm = $cm;
-            $payload->course = self::get_course_by_id($cm->course);
+        if ($instance = instance::get_from_idnumber($payload->object)) {
+            $payload->cm = $instance->get_cm();
+            $payload->course = $instance->get_course();
             $payload->updateresponse = self::mark_completed($payload);
         } else {
             $payload->updateresponse = new \stdClass();
@@ -124,46 +130,6 @@ class xapihelper {
 
         if ($user = $DB->get_record('user', $params, 'id,username')) {
             return $user;
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * Retrieve a course by its id.
-     *
-     * @param string $courseid course id.
-     * @return object|null course or null.
-     */
-    public static function get_course_by_id($courseid) {
-        global $DB;
-
-        $params = array('id' => $courseid);
-        if ($course = $DB->get_record('course', $params)) {
-            return $course;
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * Retrieve the course module with idnumber
-     *
-     * @param string $idnumber Unique idnumber
-     * @return object|null coursemodules or null
-     */
-    public static function get_cm_by_idnumber($idnumber) {
-        global $DB;
-
-        $params = array('courseidnumber' => $idnumber, 'modulename' => 'externalcontent');
-
-        $sql = "SELECT cm.*
-                FROM {course_modules} cm
-                JOIN {modules} md ON md.id = cm.module
-                WHERE cm.idnumber = :courseidnumber AND md.name = :modulename";
-
-        if ($cm = $DB->get_record_sql($sql, $params)) {
-            return $cm;
         } else {
             return null;
         }

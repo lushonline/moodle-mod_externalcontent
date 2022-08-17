@@ -21,19 +21,20 @@
  * @copyright   2019-2022 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+use mod_externalcontent\instance;
 
 require(__DIR__.'/../../config.php');
 
-// Course_module ID.
-$id = required_param('id', PARAM_INT);
+// Get the external conmtent instance from either the cmid (id), or the instanceid (p).
+$id = optional_param('id', 0, PARAM_INT);
+$instance = instance::get_from_cmid($id);
 
-if (!$cm = get_coursemodule_from_id('externalcontent', $id)) {
+if (!$instance) {
     throw new moodle_exception('invalidcoursemodule', 'error');
 }
-$externalcontent = $DB->get_record('externalcontent', array('id' => $cm->instance), '*', MUST_EXIST);
-$course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
+
+$cm = $instance->get_cm();
+$course = $instance->get_course();
 
 require_course_login($course, true, $cm);
-$context = context_module::instance($cm->id);
-
 redirect(new moodle_url('/mod/externalcontent/view.php', array('id' => $cm->id)));

@@ -22,13 +22,16 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require(__DIR__.'/../../config.php');
+use core\notification;
+use mod_externalcontent\instance;
+use mod_externalcontent\output\index;
+use mod_externalcontent\plugin;
 
-require_once($CFG->dirroot.'/mod/externalcontent/lib.php');
+require(__DIR__.'/../../config.php');
+global $PAGE, $OUTPUT;
 
 $id = required_param('id', PARAM_INT);
-
-$course = $DB->get_record('course', array('id' => $id), '*', MUST_EXIST);
+$course = get_course($id);
 require_course_login($course);
 
 $coursecontext = context_course::instance($course->id);
@@ -40,57 +43,21 @@ $event->add_record_snapshot('course', $course);
 $event->trigger();
 
 $PAGE->set_url('/mod/externalcontent/index.php', array('id' => $id));
-$PAGE->set_title(format_string($course->fullname));
+$PAGE->set_title(get_string('modulename', plugin::COMPONENT));
 $PAGE->set_heading(format_string($course->fullname));
-$PAGE->set_context($coursecontext);
+$PAGE->set_cacheable(false);
+
+$instances = instance::get_all_instances_in_course($course->id);
+if (empty($instances)) {
+    notification::add(
+        get_string('thereareno', 'moodle', get_string('modulenameplural', plugin::COMPONENT)),
+        notification::ERROR
+    );
+    redirect(new moodle_url('/course/view.php', ['id' => $course->id]));
+}
 
 echo $OUTPUT->header();
-
-$modulename       = get_string('modulename', 'externalcontent');
-$modulenameplural = get_string('modulenameplural', 'externalcontent');
-
-if ($CFG->branch < '400') {
-    echo $OUTPUT->heading($modulenameplural);
-}
-
-$externalcontents = get_all_instances_in_course('externalcontent', $course);
-
-if (empty($externalcontents)) {
-    notice(get_string('thereareno', 'moodle', $modulenameplural), new moodle_url('/course/view.php', array('id' => $course->id)));
-}
-
-$table = new html_table();
-$table->attributes['class'] = 'generaltable mod_index';
-
-if ($course->format == 'weeks') {
-    $table->head  = array(get_string('week'), get_string('name'));
-    $table->align = array('center', 'left');
-} else if ($course->format == 'topics') {
-    $table->head  = array(get_string('topic'), get_string('name'));
-    $table->align = array('center', 'left', 'left', 'left');
-} else {
-    $table->head  = array(get_string('name'));
-    $table->align = array('left', 'left', 'left');
-}
-
-foreach ($externalcontents as $externalcontent) {
-    if (!$externalcontent->visible) {
-        $link = html_writer::link(
-            new moodle_url('/mod/externalcontent/view.php', array('id' => $externalcontent->coursemodule)),
-            format_string($externalcontent->name, true),
-            array('class' => 'dimmed'));
-    } else {
-        $link = html_writer::link(
-            new moodle_url('/mod/externalcontent/view.php', array('id' => $externalcontent->coursemodule)),
-            format_string($externalcontent->name, true));
-    }
-
-    if ($course->format == 'weeks' || $course->format == 'topics') {
-        $table->data[] = array($externalcontent->section, $link);
-    } else {
-        $table->data[] = array($link);
-    }
-}
-
-echo html_writer::table($table);
+echo $OUTPUT->heading(get_string('modulenameplural', plugin::COMPONENT));
+$renderer = $PAGE->get_renderer(plugin::COMPONENT);
+echo $renderer->render(new index($course, $instances));
 echo $OUTPUT->footer();

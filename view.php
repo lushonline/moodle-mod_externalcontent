@@ -21,36 +21,40 @@
  * @copyright   2019-2022 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+use mod_externalcontent\instance;
+use mod_externalcontent\plugin;
+use mod_externalcontent\output\view_page;
 
 require(__DIR__.'/../../config.php');
 require_once($CFG->dirroot.'/mod/externalcontent/lib.php');
-require_once($CFG->dirroot.'/mod/externalcontent/locallib.php');
-require_once($CFG->libdir.'/completionlib.php');
 
-// Course_module ID, or.
+// Get the external conmtent instance from either the cmid (id), or the instanceid (p).
 $id = optional_param('id', 0, PARAM_INT);
-
-// Module instance id.
-$p  = optional_param('p', 0, PARAM_INT);
-
-if ($p) {
-    if (!$externalcontent = $DB->get_record('externalcontent', array('id' => $p))) {
-        throw new moodle_exception('invalidaccessparameter', 'error');
-    }
-    $cm = get_coursemodule_from_instance('externalcontent', $externalcontent->id,
-                                        $externalcontent->course, false, MUST_EXIST);
-
-} else {
-    if (!$cm = get_coursemodule_from_id('externalcontent', $id)) {
+if ($id) {
+    $instance = instance::get_from_cmid($id);
+    if (!$instance) {
         throw new moodle_exception('invalidcoursemodule', 'error');
     }
-    $externalcontent = $DB->get_record('externalcontent', array('id' => $cm->instance), '*', MUST_EXIST);
+} else {
+    $p = optional_param('p', 0, PARAM_INT);
+    if ($p) {
+        $instance = instance::get_from_instanceid($p);
+        if (!$instance) {
+            throw new moodle_exception('invalidaccessparameter', 'error');
+        }
+    }
 }
 
-$course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
+if (!$instance) {
+    throw new moodle_exception('invalidaccessparameter', 'error');
+}
+
+$cm = $instance->get_cm();
+$course = $instance->get_course();
+$externalcontent = $instance->get_instance_data();
+$context = $instance->get_context();
 
 require_course_login($course, true, $cm);
-$context = context_module::instance($cm->id);
 require_capability('mod/externalcontent:view', $context);
 
 // Completion and trigger events.
@@ -96,18 +100,8 @@ if (!class_exists('core\output\activity_header')) {
     }
 }
 
-$formatoptions = new stdClass;
-$formatoptions->noclean = true;
-$formatoptions->overflowdiv = true;
-$formatoptions->context = $context;
+$renderer = $PAGE->get_renderer('mod_externalcontent');
+echo $renderer->render(new view_page($instance));
 
-$content = $externalcontent->content;
-$content = format_text( $content, $externalcontent->contentformat, $formatoptions);
-echo $OUTPUT->box($content, "generalbox center clearfix");
-
-if (!isset($options['printlastmodified']) || !empty($options['printlastmodified'])) {
-    $strlastmodified = get_string("lastmodified");
-    echo html_writer::div("$strlastmodified: " . userdate($externalcontent->timemodified), 'modified');
-}
 echo $OUTPUT->box_end();
 echo $OUTPUT->footer();

@@ -26,6 +26,8 @@ namespace mod_externalcontent\output;
 
 defined('MOODLE_INTERNAL') || die();
 
+use mod_externalcontent\instance;
+
 require_once($CFG->dirroot . '/mod/externalcontent/lib.php');
 
 /**
@@ -48,19 +50,25 @@ class mobile {
      * @throws \moodle_exception
      */
     public static function mobile_course_view($args) {
-        global $OUTPUT, $DB;
+        global $OUTPUT;
 
         $args = (object) $args;
         $versionname = $args->appversioncode >= 3950 ? 'latest' : 'ionic3';
-        $cm = get_coursemodule_from_id('externalcontent', $args->cmid);
+
+        $instance = instance::get_from_cmid($args->cmid);
+
+        if (!$instance) {
+            return self::mobile_print_error(get_string('invalidaccessparameter'));
+        }
+        $cm = $instance->get_cm();
 
         require_login($args->courseid, false, $cm, true, true);
 
-        $context = \context_module::instance($cm->id);
+        $context = $instance->get_context();
         require_capability('mod/externalcontent:view', $context);
 
-        $externalcontent = $DB->get_record('externalcontent', array('id' => $cm->instance));
-        $course = get_course($cm->course);
+        $course = $instance->get_course();
+        $externalcontent = $instance->get_instance_data();
 
         // Mark the externalcontent as viewed.
         externalcontent_view($externalcontent, $course, $cm, $context);
@@ -92,6 +100,33 @@ class mobile {
           'javascript' => '',
           'otherdata' => '',
           'files' => [],
+        ];
+    }
+
+
+    /**
+     * Returns the view for errors.
+     *
+     * @param string $error Error to display.
+     * @param string $versionname The version name of the template to use
+     * @return array HTML, javascript and otherdata
+     */
+    protected static function mobile_print_error($error, $versionname = 'ionic3'): array {
+        global $OUTPUT;
+
+        return [
+            'templates' => [
+                [
+                    'id' => 'main',
+                    'html' => $OUTPUT->render_from_template(
+                        'mod_externalcontent/mobile_view_error_'.$versionname,
+                        ['error' => $error]
+                      ),
+                ],
+            ],
+            'javascript' => '',
+            'otherdata' => '',
+            'files' => '',
         ];
     }
 }

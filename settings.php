@@ -25,6 +25,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 if ($ADMIN->fulltree) {
+    $xapiurl = new moodle_url('/mod/externalcontent/lrs/index.php');
+
     // Mod edit settings.
     $settings->add(new admin_setting_heading('externalcontentmodeditdefaults', get_string('modeditdefaults', 'admin'),
                         get_string('condifmodeditdefaults', 'admin')));
@@ -37,6 +39,12 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_heading('externalcontent/xapisetting',
         get_string('xapisetting', 'externalcontent'), ''));
 
+    $settings->add(new admin_setting_heading(
+        'externalcontent/xapiurllink',
+        '',
+        $OUTPUT->notification(get_string('xapiurllink', 'externalcontent', $xapiurl.''), 'info')));
+
+
     $settings->add(new admin_setting_configcheckbox('externalcontent/xapienable',
         get_string('xapienable', 'externalcontent'), get_string('xapienableexplain', 'externalcontent'), 1));
 
@@ -44,18 +52,13 @@ if ($ADMIN->fulltree) {
         get_string('xapiusername', 'externalcontent'), get_string('xapiusernameexplain', 'externalcontent'),
         get_config('externalcontent', 'xapidefaultusername')));
 
-        $settings->add(new admin_setting_configtext('externalcontent/xapipassword',
+    $settings->add(new admin_setting_configtext('externalcontent/xapipassword',
         get_string('xapipassword', 'externalcontent'), get_string('xapipasswordexplain', 'externalcontent'),
         get_config('externalcontent', 'xapidefaultpassword')));
 
-    $settings->add(new admin_setting_configtext('externalcontent/xapicompletionverbs',
+    $settings->add(new admin_setting_configtextarea('externalcontent/xapicompletionverbs',
         get_string('xapicompletionverbs', 'externalcontent'), get_string('xapicompletionverbsexplain', 'externalcontent'),
-        'http://adlnet.gov/expapi/verbs/completed,http://adlnet.gov/expapi/verbs/passed'));
+        'http://adlnet.gov/expapi/verbs/completed,http://adlnet.gov/expapi/verbs/passed'),
+        PARAM_TEXT);
 
-    $settings->add(new admin_setting_heading('externalcontent/xapiurlsetting',
-        get_string('xapiurl', 'externalcontent'), ''));
-
-    $xapiurl = new moodle_url('/mod/externalcontent/lrs/index.php');
-    $settings->add(new admin_setting_heading('externalcontent/xapiurl', '',
-                    get_string('xapiurlintro', 'externalcontent', $xapiurl.'')));
 }
