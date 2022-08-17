@@ -68,10 +68,7 @@ $string['xapiusernameexplain'] = 'The username for the xAPI functionality.';
 $string['xapipassword'] = 'xAPI LRS Password';
 $string['xapipasswordexplain'] = 'The password for the xAPI functionality.';
 
-$string['xapiurl'] = 'xAPI LRS URL';
-$string['xapiurlintro'] = 'The path to use when configuring the xAPI Activity Provider that will send statements to this xAPI LRS is:
-
-{$a}';
+$string['xapiurllink'] = 'The URL to use when configuring the xAPI Activity Provider that will send statements to this xAPI LRS is:<br><a href="{$a}">{$a}</a>';
 
 $string['report'] = 'External content report';
 $string['summary'] = 'Summary';
