@@ -166,6 +166,25 @@ class importableinstance extends instance {
     }
 
     /**
+     * Get the current course tags as array sorted alphbetically
+     *
+     * @param int $courseid
+     * @return array
+     */
+    private static function get_course_tags(int $courseid) : array {
+        $tags = array();
+        if (\core_tag_tag::is_enabled('core', 'course')) {
+            $coursetags = \core_tag_tag::get_item_tags_array('core', 'course', $courseid,
+                    \core_tag_tag::BOTH_STANDARD_AND_NOT, 0, false);
+
+            foreach ($coursetags as $value) {
+                array_push($tags, $value);
+            }
+        }
+        return $tags;
+    }
+
+    /**
      * create_from_importrecord
      *
      * @param importrecord $importrecord
@@ -190,7 +209,7 @@ class importableinstance extends instance {
         $moduleimport->course = $course->id;
 
         $messages[] = 'Course: created.';
-        $messages[] = $courseimport->visible ? 'Course: visible.' : 'Course: hidden';
+        $messages[] = $courseimport->visible ? 'Course Visibility Updated: visible.' : 'Course Visibility Updated: hidden.';
 
         $instance = $generator->create_module('externalcontent', $moduleimport);
 
@@ -238,6 +257,10 @@ class importableinstance extends instance {
 
         $courseimport = clone $importrecord->get_courseimport();
 
+        if ($instance->is_course_visible() != (bool)$courseimport->visible) {
+            $messages[] = $courseimport->visible ? 'Course Visibility Updated: visible.' : 'Course Visibility Updated: hidden.';
+        }
+
         $courseupdateneeded = false;
         foreach ($instance->course as $k => $v) {
             if (isset($courseimport->$k) && !in_array($k, $courseimport->readonly)) {
@@ -248,7 +271,7 @@ class importableinstance extends instance {
                 };
             }
         }
-        $messages[] = $courseimport->visible ? 'Course: visible.' : 'Course: hidden.';
+
         // Update the course object.
         if ($courseupdateneeded) {
             update_course($instance->course);
@@ -256,9 +279,17 @@ class importableinstance extends instance {
 
         // Update tags.
         if (\core_tag_tag::is_enabled('core', 'course') && count($courseimport->tags) > 0) {
-            \core_tag_tag::set_item_tags('core', 'course', $instance->get_course_id(),
-                                         $instance->get_context_course(), $courseimport->tags);
-            $messages[] = 'Course Property: tags updated.';
+            $existingtags = self::get_course_tags($instance->get_course_id());
+
+            if (!$tagsmatch = (
+                array_diff($existingtags, $courseimport->tags) == [] &&
+                array_diff($courseimport->tags, $existingtags) == [])) {
+                    \core_tag_tag::set_item_tags('core', 'course',
+                                                 $instance->get_course_id(),
+                                                 $instance->get_context_course(),
+                                                 $courseimport->tags);
+                    $messages[] = 'Course Property: tags updated.';
+            }
         }
 
         $moduleimport = clone $importrecord->get_moduleimport();
@@ -298,7 +329,7 @@ class importableinstance extends instance {
 
         $newinstance = self::get_from_cmid($cm->id);
         $newinstance->clear_messages();
-        $newinstance->set_messages($messages);
+        $newinstance->set_messages(count($messages) > 0 ? $messages : ['No changes']);
         return $newinstance;
     }
 
