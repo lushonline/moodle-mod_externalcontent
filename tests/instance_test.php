@@ -36,36 +36,36 @@ class instance_test extends advanced_testcase {
         $this->resetAfterTest();
 
         [
-            'record' => $record,
+            'module' => $module,
             'cm' => $cm,
         ] = $this->get_test_instance();
 
         $instance = instance::get_from_cmid($cm->id);
 
         $this->assertInstanceOf(instance::class, $instance);
-        $this->assertEquals($record->id, $instance->get_instance_id());
+        $this->assertEquals($module->id, $instance->get_module_id());
         $this->assertEquals($cm->id, $instance->get_cm()->id);
     }
 
     /**
      * Get from id number
      *
-     * @covers ::get_from_idnumber
+     * @covers ::get_from_cmidnumber
      */
-    public function test_get_from_idnumber(): void {
+    public function test_get_from_cmidnumber(): void {
         $this->resetAfterTest();
 
         [
-            'record' => $record,
+            'module' => $module,
             'cm' => $cm,
         ] = $this->get_test_instance();
 
-        $instance = instance::get_from_idnumber($cm->idnumber);
+        $instance = instance::get_from_cmidnumber($cm->idnumber);
 
         $this->assertInstanceOf(instance::class, $instance);
-        $this->assertEquals($record->id, $instance->get_instance_id());
-        $this->assertEquals($record->cmid, $instance->get_cm_id());
-        $this->assertEquals($record->cmid, $instance->get_cm()->id);
+        $this->assertEquals($module->id, $instance->get_module_id());
+        $this->assertEquals($module->cmid, $instance->get_cm_id());
+        $this->assertEquals($module->cmid, $instance->get_cm()->id);
     }
 
     /**
@@ -78,18 +78,18 @@ class instance_test extends advanced_testcase {
 
     /**
      * If the instance was not found, and exception should be thrown.
-     * @covers ::get_from_instanceid
+     * @covers ::get_from_moduleid
      */
     public function test_get_from_instance_not_found(): void {
-        $this->assertNull(instance::get_from_instanceid(100));
+        $this->assertNull(instance::get_from_moduleid(100));
     }
 
     /**
      * If the instance was not found, and exception should be thrown.
-     * @covers ::get_from_idnumber
+     * @covers ::get_from_cmidnumber
      */
-    public function test_get_from_idnumber_not_found(): void {
-        $this->assertNull(instance::get_from_idnumber('none-existent'));
+    public function test_get_from_cmidnumber_not_found(): void {
+        $this->assertNull(instance::get_from_cmidnumber('none-existent'));
     }
 
     /**
@@ -101,14 +101,14 @@ class instance_test extends advanced_testcase {
         $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
-        $records = [];
+        $modules = [];
         for ($i = 0; $i < 5; $i++) {
-            $records[] = $this->getDataGenerator()->create_module('externalcontent', [
+            $modules[] = $this->getDataGenerator()->create_module('externalcontent', [
                 'course' => $course->id,
             ]);
         }
 
-        $instances = instance::get_all_instances_in_course($course->id);
+        $instances = instance::get_all_modules_in_course($course->id);
         $this->assertCount(5, $instances);
         foreach ($instances as $instance) {
             $this->assertInstanceOf(instance::class, $instance);
@@ -139,18 +139,17 @@ class instance_test extends advanced_testcase {
             array_merge($defaultcourseopts, $courseoptions)
         );
 
-        $record = $this->getDataGenerator()->create_module('externalcontent',
+        $module = $this->getDataGenerator()->create_module('externalcontent',
             array_merge(array('course' => $course->id), $defaultmoddata, $moduledata),
             array_merge($defaultmodopts, $moduleoptions)
         );
 
-        $cm = get_fast_modinfo($course)->instances['externalcontent'][$record->id];
+        $cm = get_fast_modinfo($course)->instances['externalcontent'][$module->id];
 
         return [
             'course' => $course,
-            'record' => $record,
+            'module' => $module,
             'cm' => $cm,
         ];
     }
-
 }

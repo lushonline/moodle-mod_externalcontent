@@ -51,17 +51,17 @@ class view_page implements renderable, templatable {
      */
     public function export_for_template(renderer_base $output): stdClass {
 
-        $displayopions = empty($this->instance->get_instance_var('displayoptions')) ?
+        $displayopions = empty($this->instance->get_module_var('displayoptions')) ?
                         array() :
-                        unserialize($this->instance->get_instance_var('displayoptions'));
+                        unserialize($this->instance->get_module_var('displayoptions'));
 
         $templatedata = (object) [
-            'instanceid' => $this->instance->get_instance_id(),
-            'name' => $this->instance->get_name(),
-            'description' => $this->instance->get_description(),
-            'content' => $this->instance->get_content(),
+            'moduleid' => $this->instance->get_module_id(),
+            'name' => $this->instance->get_module_name(),
+            'intro' => $this->instance->get_module_intro(),
+            'content' => $this->instance->get_module_content(),
             'showlastmodified' => $displayopions['printlastmodified'] == 1,
-            'lastmodified' => get_string("lastmodified").": ".userdate($this->instance->get_instance_var('timemodified'))
+            'lastmodified' => get_string("lastmodified").": ".userdate($this->instance->get_module_var('timemodified'))
         ];
         return $templatedata;
     }

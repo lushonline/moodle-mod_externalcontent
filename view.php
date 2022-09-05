@@ -38,7 +38,7 @@ if ($id) {
 } else {
     $p = optional_param('p', 0, PARAM_INT);
     if ($p) {
-        $instance = instance::get_from_instanceid($p);
+        $instance = instance::get_from_moduleid($p);
         if (!$instance) {
             throw new moodle_exception('invalidaccessparameter', 'error');
         }
@@ -51,8 +51,8 @@ if (!$instance) {
 
 $cm = $instance->get_cm();
 $course = $instance->get_course();
-$externalcontent = $instance->get_instance_data();
-$context = $instance->get_context();
+$externalcontent = $instance->get_module();
+$context = $instance->get_context_module();
 
 require_course_login($course, true, $cm);
 require_capability('mod/externalcontent:view', $context);

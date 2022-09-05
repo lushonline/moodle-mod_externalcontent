@@ -64,11 +64,11 @@ class mobile {
 
         require_login($args->courseid, false, $cm, true, true);
 
-        $context = $instance->get_context();
+        $context = $instance->get_context_module();
         require_capability('mod/externalcontent:view', $context);
 
         $course = $instance->get_course();
-        $externalcontent = $instance->get_instance_data();
+        $externalcontent = $instance->get_module();
 
         // Mark the externalcontent as viewed.
         externalcontent_view($externalcontent, $course, $cm, $context);
@@ -87,7 +87,7 @@ class mobile {
         $data = [
           'cmid' => $cm->id,
           'courseid' => $course->id,
-          'instance' => $externalcontent
+          'module' => $externalcontent
         ];
 
         return [

@@ -88,7 +88,7 @@ class xapihelper {
 
         // Retrieve the course module that has the specified object id as its idnumber.
         // Moodle prevents duplicate idnumbers.
-        if ($instance = instance::get_from_idnumber($payload->object)) {
+        if ($instance = instance::get_from_cmidnumber($payload->object)) {
             $payload->cm = $instance->get_cm();
             $payload->course = $instance->get_course();
             $payload->updateresponse = self::mark_completed($payload);
