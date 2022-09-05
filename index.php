@@ -47,7 +47,7 @@ $PAGE->set_title(get_string('modulename', plugin::COMPONENT));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->set_cacheable(false);
 
-$instances = instance::get_all_instances_in_course($course->id);
+$instances = instance::get_all_modules_in_course($course->id);
 if (empty($instances)) {
     notification::add(
         get_string('thereareno', 'moodle', get_string('modulenameplural', plugin::COMPONENT)),

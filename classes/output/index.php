@@ -104,10 +104,10 @@ class index implements renderable {
             $classes = array('class' => 'dimmed');
         }
         $link = html_writer::link(
-            $instance->get_view_url(),
-            format_string($instance->get_name(), true),
+            $instance->get_module_url(),
+            format_string($instance->get_module_name(), true),
             $classes);
-        $intro = format_module_intro('externalcontent', $instance->get_instance_data(), $cm->id);
+        $intro = format_module_intro('externalcontent', $instance->get_module(), $cm->id);
 
         // Determine the current section name.
         $printsection = '';

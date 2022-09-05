@@ -39,174 +39,53 @@ use stdClass;
  */
 class instance {
 
-    /** @var cm_info The cm_info object relating to the instance */
-    protected $cm;
+    /** @var cm_info The cm_info object relating to the module */
+    protected $cm = null;
 
-    /** @var stdClass The course that the instance is in */
-    protected $course;
+    /** @var stdClass The course that the module is in */
+    protected $course = null;
 
-    /** @var stdClass The instance data for the instance */
-    protected $instancedata;
+    /** @var stdClass The module data for the module */
+    protected $module = null;
 
-    /** @var context The current context */
-    protected $context;
+    /** @var modulecontext The current module context */
+    protected $modulecontext = null;
+
+    /** @var messages An array of messages about changes made or erros */
+    protected $messages = null;
 
     /**
-     * instance constructor.
+     * Instance constructor.
      *
      * @param cm_info $cm
      * @param stdClass $course
-     * @param stdClass $instancedata
+     * @param stdClass $module
+     * @param array $messages
      */
-    public function __construct(cm_info $cm, stdClass $course, stdClass $instancedata) {
+    public function __construct(cm_info $cm, stdClass $course, stdClass $module, array $messages = array()) {
         $this->cm = $cm;
         $this->course = $course;
-        $this->instancedata = $instancedata;
+        $this->module = $module;
+        $this->messages = $messages;
     }
 
     /**
-     * Get the instance information from an instance id.
+     * Retrieve records from database, passing where clause to query
      *
-     * @param int $instanceid The id from the bigbluebuttonbn table
-     * @return null|self
+     * If no errors occur the return value
+     * is an associative whose keys come from the cm id,
+     * and whose values are the corresponding instances.
+     * False is returned if an error occurs.
+     *
+     * @param string $where the where clause
+     * @return self[]|bool
      */
-    public static function get_from_instanceid(int $instanceid): ?self {
+    private static function get_from_sql(string $where) : ?array {
         global $DB;
 
-        $coursetable = new \core\dml\table('course', 'c', 'c');
-        $courseselect = $coursetable->get_field_select();
-        $coursefrom = $coursetable->get_from_sql();
-
-        $cmtable = new \core\dml\table('course_modules', 'cm', 'cm');
-        $cmfrom = $cmtable->get_from_sql();
-
-        $exttable = new \core\dml\table('externalcontent', 'ext', 'ext');
-        $extselect = $exttable->get_field_select();
-        $extfrom = $exttable->get_from_sql();
-
-        $sql = <<<EOF
-            SELECT {$courseselect}, {$extselect}
-                FROM {$cmfrom}
-            INNER JOIN {$coursefrom} ON c.id = cm.course
-            INNER JOIN {modules} m ON m.id = cm.module AND m.name = :modname
-            INNER JOIN {$extfrom} ON cm.instance = ext.id
-            WHERE ext.id = :instanceid
-            EOF;
-
-        $result = $DB->get_record_sql($sql, [
-            'modname' => 'externalcontent',
-            'instanceid' => $instanceid,
-        ]);
-
-        if (empty($result)) {
+        if (empty($where)) {
             return null;
         }
-
-        $course = $coursetable->extract_from_result($result);
-        $instancedata = $exttable->extract_from_result($result);
-        $cm = get_fast_modinfo($course)->instances['externalcontent'][$instancedata->id];
-
-        return new self($cm, $course, $instancedata);
-    }
-
-    /**
-     * Get the instance information from a cmid.
-     *
-     * @param int $cmid
-     * @return null|self
-     */
-    public static function get_from_cmid(int $cmid): ?self {
-        global $DB;
-
-        $coursetable = new \core\dml\table('course', 'c', 'c');
-        $courseselect = $coursetable->get_field_select();
-        $coursefrom = $coursetable->get_from_sql();
-
-        $cmtable = new \core\dml\table('course_modules', 'cm', 'cm');
-        $cmfrom = $cmtable->get_from_sql();
-
-        $exttable = new \core\dml\table('externalcontent', 'ext', 'ext');
-        $extselect = $exttable->get_field_select();
-        $extfrom = $exttable->get_from_sql();
-
-        $sql = <<<EOF
-                SELECT {$courseselect}, {$extselect}
-                FROM {$cmfrom}
-            INNER JOIN {$coursefrom} ON c.id = cm.course
-            INNER JOIN {modules} m ON m.id = cm.module AND m.name = :modname
-            INNER JOIN {$extfrom} ON cm.instance = ext.id
-                WHERE cm.id = :cmid
-            EOF;
-
-        $result = $DB->get_record_sql($sql, [
-            'modname' => 'externalcontent',
-            'cmid' => $cmid,
-        ]);
-
-        if (empty($result)) {
-            return null;
-        }
-
-        $course = $coursetable->extract_from_result($result);
-        $instancedata = $exttable->extract_from_result($result);
-        $cm = get_fast_modinfo($course)->get_cm($cmid);
-
-        return new self($cm, $course, $instancedata);
-    }
-
-    /**
-     * Get the instance information from an course module idnumber.
-     *
-     * @param string $idnumber
-     * @return null|self
-     */
-    public static function get_from_idnumber(string $idnumber): ?self {
-        global $DB;
-
-        $coursetable = new \core\dml\table('course', 'c', 'c');
-        $courseselect = $coursetable->get_field_select();
-        $coursefrom = $coursetable->get_from_sql();
-
-        $cmtable = new \core\dml\table('course_modules', 'cm', 'cm');
-        $cmfrom = $cmtable->get_from_sql();
-
-        $exttable = new \core\dml\table('externalcontent', 'ext', 'ext');
-        $extselect = $exttable->get_field_select();
-        $extfrom = $exttable->get_from_sql();
-
-        $sql = <<<EOF
-                SELECT {$courseselect}, {$extselect}
-                FROM {$cmfrom}
-            INNER JOIN {$coursefrom} ON c.id = cm.course
-            INNER JOIN {modules} m ON m.id = cm.module AND m.name = :modname
-            INNER JOIN {$extfrom} ON cm.instance = ext.id
-                WHERE cm.idnumber = :idnumber
-            EOF;
-
-        $result = $DB->get_record_sql($sql, [
-            'modname' => 'externalcontent',
-            'idnumber' => $idnumber,
-        ]);
-
-        if (empty($result)) {
-            return null;
-        }
-
-        $course = $coursetable->extract_from_result($result);
-        $instancedata = $exttable->extract_from_result($result);
-        $cm = get_fast_modinfo($course)->instances['externalcontent'][$instancedata->id];
-
-        return new self($cm, $course, $instancedata);
-    }
-
-    /**
-     * Get all instances in the specified course.
-     *
-     * @param int $courseid
-     * @return self[]
-     */
-    public static function get_all_instances_in_course(int $courseid): array {
-        global $DB;
 
         $coursetable = new \core\dml\table('course', 'c', 'c');
         $courseselect = $coursetable->get_field_select();
@@ -223,102 +102,158 @@ class instance {
                 SELECT cm.id as cmid, {$courseselect}, {$extselect}
                 FROM {$cmfrom}
             INNER JOIN {$coursefrom} ON c.id = cm.course
-            INNER JOIN {modules} m ON m.id = cm.module AND m.name = :modname
+            INNER JOIN {modules} m ON m.id = cm.module AND m.name = 'externalcontent'
             INNER JOIN {$extfrom} ON cm.instance = ext.id
-                WHERE cm.course = :courseid
+                {$where}
             EOF;
 
-        $results = $DB->get_records_sql($sql, [
-            'modname' => 'externalcontent',
-            'courseid' => $courseid,
-        ]);
+        if ($results = $DB->get_records_sql($sql)) {
+            $instances = [];
+            foreach ($results as $result) {
+                $course = $coursetable->extract_from_result($result);
+                $module = $exttable->extract_from_result($result);
+                $cm = get_fast_modinfo($course)->get_cm($result->cmid);
+                $instances[$cm->id] = new self($cm, $course, $module);
+            }
+            return $instances;
+        };
 
-        $instances = [];
-        foreach ($results as $result) {
-            $course = $coursetable->extract_from_result($result);
-            $instancedata = $exttable->extract_from_result($result);
-            $cm = get_fast_modinfo($course)->get_cm($result->cmid);
-            $instances[$cm->id] = new self($cm, $course, $instancedata);
-        }
-
-        return $instances;
+        return null;
     }
 
     /**
-     * Get the course object for the instance.
+     * Get the module information from an module id.
+     *
+     * If no errors occur the return value
+     * is the corresponding module.
+     * null is returned if an error occurs.
+     *
+     * @param int $moduleid The externalcontent id
+     * @return self|bool
+     */
+    public static function get_from_moduleid(int $moduleid): ?self {
+        $where = "WHERE ext.id = {$moduleid}";
+        if ($results = self::get_from_sql($where)) {
+            // Return the first result.
+            return reset($results);
+        }
+        return null;
+    }
+
+    /**
+     * Get the module information from a course module id.
+     *
+     * If no errors occur the return value
+     * is the corresponding module.
+     * null is returned if an error occurs.
+     *
+     * @param int $cmid The course module id
+     * @return null|self
+     */
+    public static function get_from_cmid(int $cmid): ?self {
+        $where = "WHERE cm.id = {$cmid}";
+        if ($results = self::get_from_sql($where)) {
+            // Return the first result.
+            return reset($results);
+        }
+        return null;
+    }
+
+    /**
+     * Get the module information from a course module idnumber.
+     *
+     * If no errors occur the return value
+     * is the corresponding module.
+     * null is returned if an error occurs.
+     *
+     * @param string $idnumber The course module idnumber
+     * @return null|self
+     */
+    public static function get_from_cmidnumber(string $idnumber): ?self {
+        // The idnumber is string so we need to quote it.
+        $where = "WHERE cm.idnumber = '{$idnumber}'";
+        if ($results = self::get_from_sql($where)) {
+            // Return the first result.
+            return reset($results);
+        }
+        return null;
+    }
+
+    /**
+     * Get all modules in the specified course.
+     *
+     * If no errors occur the return value
+     * is an associative whose keys come from the cm id,
+     * and whose values are the corresponding module.
+     * False is returned if an error occurs.
+     *
+     * @param int $courseid
+     * @return null|self[]
+     */
+    public static function get_all_modules_in_course(int $courseid): ?array {
+        $where = "WHERE cm.course = {$courseid}";
+        if ($results = self::get_from_sql($where)) {
+            return $results;
+        }
+        return null;
+    }
+
+    /**
+     * Get the course object for the module.
      *
      * @return stdClass
      */
     public function get_course(): stdClass {
+        if ($this->course === null) {
+            throw new moodle_exception('course has not been initialized');
+        }
         return $this->course;
     }
 
     /**
-     * Get the course id of the course that the instance is in.
-     *
-     * @return int
-     */
-    public function get_course_id(): int {
-        return $this->course->id;
-    }
-
-    /**
-     * Get the course idnumber of the course that the instance is in.
-     *
-     * @return string
-     */
-    public function get_course_idnumber(): string {
-        return $this->course->idnumber;
-    }
-
-    /**
-     * Get the cm_info object for the instance.
+     * Get the cm_info object for the module.
      *
      * @return cm_info
      */
     public function get_cm(): cm_info {
+        if ($this->cm === null) {
+            throw new moodle_exception('cm has not been initialized');
+        }
         return $this->cm;
     }
 
     /**
-     * Get the id of the course module.
+     * Get the external content module data.
      *
-     * @return int
+     * @return stdClass
      */
-    public function get_cm_id(): int {
-        return $this->get_cm()->id;
+    public function get_module(): stdClass {
+        if ($this->module === null) {
+            throw new moodle_exception('module has not been initialized');
+        }
+        return $this->module;
     }
 
     /**
-     * Get the cm idnumber of the cm that the instance is in.
-     *
-     * @return string
-     */
-    public function get_cm_idnumber(): string {
-        return $this->get_cm()->idnumber;
-    }
-
-
-    /**
-     * Get the context.
+     * Get the course module context.
      *
      * @return context_module
      */
-    public function get_context(): context_module {
-        if ($this->context === null) {
-            $this->context = context_module::instance($this->get_cm()->id);
+    public function get_context_module(): context_module {
+        if ($this->modulecontext === null) {
+            $this->modulecontext = context_module::instance($this->get_cm()->id);
         }
 
-        return $this->context;
+        return $this->modulecontext;
     }
 
     /**
-     * Get the context ID of the module context.
+     * Get the ID of the context module.
      *
      * @return int
      */
-    public function get_context_id(): int {
-        return $this->get_context()->id;
+    public function get_context_module_id(): int {
+        return $this->get_context_module()->id;
     }
 
     /**
@@ -326,75 +261,8 @@ class instance {
      *
      * @return context_course
      */
-    public function get_course_context(): context_course {
-        return $this->get_context()->get_course_context();
-    }
-
-    /**
-     * Get the external content instance data.
-     *
-     * @return stdClass
-     */
-    public function get_instance_data(): stdClass {
-        return $this->instancedata;
-    }
-
-    /**
-     * Get the external content description with the pluginfile URLs rewritten.
-     *
-     * @return string
-     */
-    public function get_description(): string {
-        $description = $this->get_instance_var('intro');
-
-        $description = file_rewrite_pluginfile_urls(
-            $description,
-            'pluginfile.php',
-            $this->get_context_id(),
-            'mod_externalcontent',
-            'intro',
-            null
-        );
-
-        return $description;
-    }
-
-    /**
-     * Get the external content with the pluginfile URLs rewritten.
-     *
-     * @return string
-     */
-    public function get_content(): string {
-        $content = $this->get_instance_var('content');
-
-        $content = file_rewrite_pluginfile_urls(
-            $content,
-            'pluginfile.php',
-            $this->get_context_id(),
-            'mod_externalcontent',
-            'content',
-            null
-        );
-
-        return $content;
-    }
-
-    /**
-     * Get the external content name.
-     *
-     * @return string
-     */
-    public function get_name(): string {
-        return $this->get_instance_var('name');
-    }
-
-    /**
-     * Get the instance id.
-     *
-     * @return int
-     */
-    public function get_instance_id(): int {
-        return $this->instancedata->id;
+    public function get_context_course(): context_course {
+        return $this->get_context_module()->get_course_context();
     }
 
     /**
@@ -413,18 +281,154 @@ class instance {
     }
 
     /**
-     * Helper to get an instance var.
+     * Helper to get a course module var.
      *
      * @param string $name
      * @return string
      */
-    public function get_instance_var(string $name) {
-        $instance = $this->get_instance_data();
-        if (property_exists($instance, $name)) {
-            return $instance->{$name};
+    public function get_cm_var(string $name) {
+        $cm = $this->get_cm();
+        if (property_exists($cm, $name)) {
+            return $cm->{$name};
         }
 
         return null;
+    }
+
+    /**
+     * Helper to get a module var.
+     *
+     * @param string $name
+     * @return string
+     */
+    public function get_module_var(string $name) {
+        $module = $this->get_module();
+        if (property_exists($module, $name)) {
+            return $module->{$name};
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the course id of the course that the module is in.
+     *
+     * @return int
+     */
+    public function get_course_id(): int {
+        return $this->get_course()->id;
+    }
+
+    /**
+     * Get the course idnumber of the course that the module is in.
+     *
+     * @return string
+     */
+    public function get_course_idnumber(): string {
+        return $this->get_course()->idnumber;
+    }
+
+    /**
+     * Get the URL used to access the course that the module is in.
+     *
+     * @return moodle_url
+     */
+    public function get_course_url(): moodle_url {
+        return new moodle_url('/course/view.php', ['id' => $this->get_course_id()]);
+    }
+
+    /**
+     * Whether the courese is visible.
+     *
+     * @return bool
+     */
+    public function is_course_visible(): bool {
+        return (bool) $this->get_course_var('visible');
+    }
+
+    /**
+     * Get the id of the course module.
+     *
+     * @return int
+     */
+    public function get_cm_id(): int {
+        return $this->get_cm()->id;
+    }
+
+    /**
+     * Get the idnumber of the cm that the module is in.
+     *
+     * @return string
+     */
+    public function get_cm_idnumber(): string {
+        return $this->get_cm()->idnumber;
+    }
+
+    /**
+     * Get the id of the module.
+     *
+     * @return string
+     */
+    public function get_module_id(): int {
+        return $this->get_module()->id;
+    }
+
+    /**
+     * Get the external content intro with the pluginfile URLs rewritten.
+     *
+     * @return string
+     */
+    public function get_module_intro(): string {
+        $intro = $this->get_module_var('intro');
+
+        $intro = file_rewrite_pluginfile_urls(
+        $intro,
+        'pluginfile.php',
+        $this->get_context_module_id(),
+        'mod_externalcontent',
+        'intro',
+        null
+        );
+
+        return $intro;
+    }
+
+    /**
+     * Get the external content with the pluginfile URLs rewritten.
+     *
+     * @return string
+     */
+    public function get_module_content(): string {
+        $content = $this->get_module_var('content');
+
+        $content = file_rewrite_pluginfile_urls(
+        $content,
+        'pluginfile.php',
+        $this->get_context_module_id(),
+        'mod_externalcontent',
+        'content',
+        null
+        );
+
+        return $content;
+    }
+
+    /**
+     * Get the external content name.
+     *
+     * @return string
+     */
+    public function get_module_name(): string {
+        return $this->get_module_var('name');
+    }
+
+    /**
+     * Get the URL used to view the module as a user.
+     *
+     * @return moodle_url
+     */
+    public function get_module_url(): moodle_url {
+        return new moodle_url('/mod/externalcontent/view.php', ['id' => $this->get_cm_id()]);
     }
 
     /**
@@ -472,29 +476,31 @@ class instance {
     }
 
     /**
-     * Whether the courese is visible.
+     * clear the messages
      *
      * @return bool
      */
-    public function is_course_visible(): bool {
-        return (bool) $this->get_course_var('visible');
+    public function clear_messages(): void {
+        $this->messages = array();
     }
 
     /**
-     * Get the URL used to access the course that the instance is in.
+     * set the messages
      *
-     * @return moodle_url
+     * @param array $messages
+     * @return bool
      */
-    public function get_course_url(): moodle_url {
-        return new moodle_url('/course/view.php', ['id' => $this->get_course_id()]);
+    public function set_messages(array $messages): void {
+        $this->messages = array_merge($this->messages, $messages);
     }
 
     /**
-     * Get the URL used to view the instance as a user.
+     * get the messages
      *
-     * @return moodle_url
+     * @return array
      */
-    public function get_view_url(): moodle_url {
-        return new moodle_url('/mod/externalcontent/view.php', ['id' => $this->get_cm_id()]);
+    public function get_messages(): array {
+        return $this->messages;
     }
+
 }
