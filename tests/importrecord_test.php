@@ -86,7 +86,7 @@ class importrecord_test extends advanced_testcase {
         $this->assertNull($moduleimport->content);
 
         // Check the default values are equal.
-        $this->assertEquals($moduleimport->markcompleteexternally, 0);
+        $this->assertEquals($moduleimport->completionexternally, 0);
         $this->assertEquals($moduleimport->introformat, 1);
         $this->assertEquals($moduleimport->contentformat, 1);
         $this->assertEquals($moduleimport->completion, 2);
