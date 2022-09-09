@@ -94,7 +94,7 @@ class importrecord {
         $module->introformat = 1; // FORMAT_HTML.
         $module->content = null;
         $module->contentformat = 1; // FORMAT_HTML.
-        $module->markcompleteexternally = 0;
+        $module->completionexternally = 0;
         $module->completion = 2;
         $module->completionview = 1;
 
