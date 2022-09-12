@@ -26,6 +26,7 @@
  * @copyright   2019-2022 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+use mod_externalcontent\plugin;
 
 /**
  * xmldb_externalcontent_install
@@ -36,5 +37,5 @@ function xmldb_externalcontent_install() {
     // Create the private key.
     global $CFG;
     require_once($CFG->dirroot.'/mod/externalcontent/locallib.php');
-    externalcontent_set_randomlrscredentials();
+    plugin::set_randomlrscredentials();
 }
