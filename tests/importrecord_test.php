@@ -33,7 +33,11 @@ class importrecord_test extends advanced_testcase {
      * @covers \mod_externalcontent\importrecord::get_courseimport()
      */
     public function test_get_courseimport(): void {
+        global $CFG;
+
         $this->resetAfterTest();
+
+        $defaults = get_config('moodlecourse');
 
         $importrecord = new importrecord();
         $result = $importrecord->get_courseimport();
@@ -54,8 +58,9 @@ class importrecord_test extends advanced_testcase {
         $this->assertEquals($result->format, "singleactivity");
         $this->assertEquals($result->numsections, 0);
         $this->assertEquals($result->newsitems, 0);
-        $this->assertEquals($result->showgrades, 0);
-        $this->assertEquals($result->showreports, 0);
+        $this->assertEquals($result->showgrades, $defaults->showgrades);
+        $this->assertEquals($result->showreports, $defaults->showreports);
+        $this->assertEquals($result->showactivitydates = $defaults->showactivitydates);
         $this->assertEquals($result->activitytype, "externalcontent");
         $this->assertEquals($result->enablecompletion, 1);
         $this->assertEquals($result->summaryformat, 1);
