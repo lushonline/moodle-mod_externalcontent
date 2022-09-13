@@ -60,7 +60,7 @@ class importrecord_test extends advanced_testcase {
         $this->assertEquals($result->newsitems, 0);
         $this->assertEquals($result->showgrades, $defaults->showgrades);
         $this->assertEquals($result->showreports, $defaults->showreports);
-        $this->assertEquals($result->showactivitydates = $defaults->showactivitydates);
+        $this->assertEquals($result->showactivitydates, $defaults->showactivitydates);
         $this->assertEquals($result->activitytype, "externalcontent");
         $this->assertEquals($result->enablecompletion, 1);
         $this->assertEquals($result->summaryformat, 1);
