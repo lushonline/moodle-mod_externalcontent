@@ -33,8 +33,6 @@ class importrecord_test extends advanced_testcase {
      * @covers \mod_externalcontent\importrecord::get_courseimport()
      */
     public function test_get_courseimport(): void {
-        global $CFG;
-
         $this->resetAfterTest();
 
         $defaults = get_config('moodlecourse');

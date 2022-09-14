@@ -44,8 +44,6 @@ class importrecord {
      * @return stdClass
      */
     private function get_default_courseimport(): \stdClass {
-        global $CFG;
-
         $defaults = get_config('moodlecourse');
 
         $course = new \stdClass();
@@ -89,8 +87,6 @@ class importrecord {
      * @return stdClass
      */
     private function get_default_moduleimport(): \stdClass {
-        global $CFG;
-
         $defaults = get_config('externalcontent');
 
         $module = new \stdClass();
