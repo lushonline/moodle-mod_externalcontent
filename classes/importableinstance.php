@@ -281,8 +281,8 @@ class importableinstance extends instance {
         if (\core_tag_tag::is_enabled('core', 'course') && count($courseimport->tags) > 0) {
             $existingtags = self::get_course_tags($instance->get_course_id());
 
-            if (array_diff($existingtags, $courseimport->tags) == [] &&
-                array_diff($courseimport->tags, $existingtags) == []) {
+            if (array_diff($existingtags, $courseimport->tags) != [] &&
+                array_diff($courseimport->tags, $existingtags) != []) {
                     \core_tag_tag::set_item_tags('core', 'course',
                                                  $instance->get_course_id(),
                                                  $instance->get_context_course(),
