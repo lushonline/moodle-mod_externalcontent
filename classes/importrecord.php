@@ -44,6 +44,8 @@ class importrecord {
      * @return stdClass
      */
     private function get_default_courseimport(): \stdClass {
+        $defaults = get_config('moodlecourse');
+
         $course = new \stdClass();
         $course->idnumber = null;
         $course->shortname = null;
@@ -57,8 +59,9 @@ class importrecord {
         $course->format = "singleactivity";
         $course->numsections = 0;
         $course->newsitems = 0;
-        $course->showgrades = 0;
-        $course->showreports = 0;
+        $course->showgrades = $defaults->showgrades;
+        $course->showreports = $defaults->showreports;
+        $course->showactivitydates = $defaults->showactivitydates;
         $course->startdate = time();
         $course->activitytype = "externalcontent";
         $course->enablecompletion = 1;
@@ -84,8 +87,6 @@ class importrecord {
      * @return stdClass
      */
     private function get_default_moduleimport(): \stdClass {
-        global $CFG;
-
         $defaults = get_config('externalcontent');
 
         $module = new \stdClass();

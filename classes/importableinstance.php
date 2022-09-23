@@ -202,8 +202,8 @@ class importableinstance extends instance {
         // We need to create.
         $generator = \phpunit_util::get_data_generator();
 
-        $courseimport = clone $importrecord->get_courseimport();
-        $moduleimport = clone $importrecord->get_moduleimport();
+        $courseimport = $importrecord->get_courseimport();
+        $moduleimport = $importrecord->get_moduleimport();
 
         $course = create_course($courseimport);
         $moduleimport->course = $course->id;
@@ -255,7 +255,7 @@ class importableinstance extends instance {
 
         $messages = array();
 
-        $courseimport = clone $importrecord->get_courseimport();
+        $courseimport = $importrecord->get_courseimport();
 
         if ($instance->is_course_visible() != (bool)$courseimport->visible) {
             $messages[] = $courseimport->visible ? 'Course Visibility Updated: visible.' : 'Course Visibility Updated: hidden.';
@@ -281,9 +281,8 @@ class importableinstance extends instance {
         if (\core_tag_tag::is_enabled('core', 'course') && count($courseimport->tags) > 0) {
             $existingtags = self::get_course_tags($instance->get_course_id());
 
-            if (!$tagsmatch = (
-                array_diff($existingtags, $courseimport->tags) == [] &&
-                array_diff($courseimport->tags, $existingtags) == [])) {
+            if (array_diff($existingtags, $courseimport->tags) != [] &&
+                array_diff($courseimport->tags, $existingtags) != []) {
                     \core_tag_tag::set_item_tags('core', 'course',
                                                  $instance->get_course_id(),
                                                  $instance->get_context_course(),
@@ -292,7 +291,7 @@ class importableinstance extends instance {
             }
         }
 
-        $moduleimport = clone $importrecord->get_moduleimport();
+        $moduleimport = $importrecord->get_moduleimport();
 
         $moduleupdateneeded = false;
         foreach ($instance->module as $k => $v) {
@@ -341,7 +340,7 @@ class importableinstance extends instance {
      * @return null|instance
      */
     public static function get_from_importrecord(importrecord $importrecord): ?instance {
-        if ($valid = $importrecord->validate()) {
+        if ($importrecord->validate()) {
             if ($result = self::get_from_cmidnumber($importrecord->get_courseimport()->idnumber)) {
                 // Update.
                 return self::update_from_importrecord($result, $importrecord);
