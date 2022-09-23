@@ -340,7 +340,7 @@ class importableinstance extends instance {
      * @return null|instance
      */
     public static function get_from_importrecord(importrecord $importrecord): ?instance {
-        if ($valid = $importrecord->validate()) {
+        if ($importrecord->validate()) {
             if ($result = self::get_from_cmidnumber($importrecord->get_courseimport()->idnumber)) {
                 // Update.
                 return self::update_from_importrecord($result, $importrecord);
