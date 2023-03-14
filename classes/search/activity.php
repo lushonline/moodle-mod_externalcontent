@@ -18,7 +18,7 @@
  * Search area for mod_externalcontent activities.
  *
  * @package     mod_externalcontent
- * @copyright   2019-2022 LushOnline
+ * @copyright   2019-2023 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -28,7 +28,7 @@ namespace mod_externalcontent\search;
  * Search area for mod_externalcontent activities.
  *
  * @package     mod_externalcontent
- * @copyright   2019-2022 LushOnline
+ * @copyright   2019-2023 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class activity extends \core_search\base_activity {

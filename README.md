@@ -77,7 +77,7 @@ If the Statement [Results](https://github.com/adlnet/xAPI-Spec/blob/master/xAPI-
 
 ## License
 
-2019-2022 LushOnline
+2019-2023 LushOnline
 
 This program is free software: you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software

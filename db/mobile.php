@@ -18,7 +18,7 @@
  * Declares the Mobile App addons provided by this plugin.
  *
  * @package     mod_externalcontent
- * @copyright   2019-2022 LushOnline
+ * @copyright   2019-2023 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

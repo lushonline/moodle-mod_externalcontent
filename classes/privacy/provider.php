@@ -18,7 +18,7 @@
  * Privacy Subsystem implementation for mod_externalcontent.
  *
  * @package     mod_externalcontent
- * @copyright   2019-2022 LushOnline
+ * @copyright   2019-2023 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 namespace mod_externalcontent\privacy;
@@ -27,7 +27,7 @@ namespace mod_externalcontent\privacy;
  * The mod_externalcontent module does not store any data.
  *
  * @package     mod_externalcontent
- * @copyright   2019-2022 LushOnline
+ * @copyright   2019-2023 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class provider implements \core_privacy\local\metadata\null_provider {

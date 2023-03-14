@@ -18,7 +18,7 @@
  * Import record for mod_externalcontent
  *
  * @package     mod_externalcontent
- * @copyright   2019-2022 LushOnline
+ * @copyright   2019-2023 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 namespace mod_externalcontent;
@@ -27,7 +27,7 @@ namespace mod_externalcontent;
  * Import record for mod_externalcontent
  *
  * @package     mod_externalcontent
- * @copyright   2019-2022 LushOnline
+ * @copyright   2019-2023 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class importrecord {

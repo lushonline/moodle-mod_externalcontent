@@ -19,7 +19,7 @@
  *
  * @package     mod_externalcontent
  * @category    external
- * @copyright   2019-2022 LushOnline
+ * @copyright   2019-2023 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 namespace mod_externalcontent;
@@ -35,7 +35,7 @@ require_once($CFG->dirroot.'/webservice/tests/helpers.php');
  *
  * @package     mod_externalcontent
  * @category    external
- * @copyright   2019-2022 LushOnline
+ * @copyright   2019-2023 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers \mod_externalcontent_external
  */

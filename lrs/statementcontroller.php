@@ -18,7 +18,7 @@
  * Basic LRS functionality to allow
  *
  * @package     mod_externalcontent
- * @copyright   2019-2022 LushOnline
+ * @copyright   2019-2023 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 defined('MOODLE_INTERNAL') || die;
@@ -35,7 +35,7 @@ use TinCan\Agent;
  * Class containing controllers for statements
  *
  * @package   mod_externalcontent
- * @copyright 2019-2022 LushOnline
+ * @copyright 2019-2023 LushOnline
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class StatementController {

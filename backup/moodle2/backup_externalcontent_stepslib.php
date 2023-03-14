@@ -19,7 +19,7 @@
  *
  * @package     mod_externalcontent
  * @category    backup
- * @copyright   2019-2022 LushOnline
+ * @copyright   2019-2023 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -30,7 +30,7 @@
 /**
  * Define the complete structure for backup, with file and id annotations.
  * @package     mod_externalcontent
- * @copyright   2019-2022 LushOnline
+ * @copyright   2019-2023 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class backup_externalcontent_activity_structure_step extends backup_activity_structure_step {
