@@ -369,10 +369,14 @@ class importableinstance extends instance {
         if ($options->downloadthumbnail) {
             if (self::set_course_thumbnail($instance, $courseimport->thumbnail)) {
                 $messages[] = 'Course: thumbnail updated.';
+                // Flush the image cache.
+                \cache::make('core', 'course_image')->delete($instance->course->id);
             };
         } else {
             if (self::set_course_thumbnail_customfield($instance, $courseimport->thumbnail)) {
                 $messages[] = 'Course custom field: thumbnail updated.';
+                // Flush the image cache.
+                \cache::make('core', 'course_image')->delete($instance->course->id);
             };
         }
 
