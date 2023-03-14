@@ -106,7 +106,7 @@ class importrecord {
         $module->printlastmodified = $defaults->printintro;
 
         $displayoptions = array();
-        $displayoptions['printintro']   = $defaults->printintro;
+        $displayoptions['printintro'] = $defaults->printintro;
         $displayoptions['printlastmodified'] = $defaults->printlastmodified;
         $module->displayoptions = serialize($displayoptions);
 
@@ -135,7 +135,7 @@ class importrecord {
         // 0 = Dont download.
         $options->downloadthumbnail = 1;
 
-        $module->readonly = array();
+        $options->readonly = array();
 
         return $options;
     }
