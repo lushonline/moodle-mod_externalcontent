@@ -90,7 +90,7 @@ class importableinstance extends instance {
     }
 
     /**
-     * set_course_thumbnail_from_url1
+     * set_course_thumbnail
      *
      * @param instance $instance
      * @param string $url
@@ -166,6 +166,43 @@ class importableinstance extends instance {
     }
 
     /**
+     * set_course_thumbnail_customfield
+     *
+     * @param instance $instance
+     * @param string $url
+     * @return bool
+     */
+    private static function set_course_thumbnail_customfield(instance $instance, ?string $url = null) : bool {
+        $handler = \core_customfield\handler::get_handler('core_course', 'course');
+        $context = $handler->get_instance_context($instance->course->id);
+        $editablefields = $handler->get_editable_fields($instance->course->id);
+        $records = \core_customfield\api::get_instance_fields_data($editablefields, $instance->course->id);
+
+        $response = false;
+        try {
+            foreach ($records as $d) {
+                $field = $d->get_field();
+                if ($field->get('shortname') === 'thumbnailurl') {
+                    // Only update if they dont match.
+                    if ($d->get($d->datafield()) !== $url) {
+                        $d->set($d->datafield(), $url);
+                        $d->set('value', $url);
+                        $d->set('contextid', $context->id);
+                        $d->set('valueformat', 0);
+                        $d->save();
+                        $response = true;
+                    }
+                    break;
+                }
+            }
+
+            return $response;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    /**
      * Get the current course tags as array sorted alphbetically
      *
      * @param int $courseid
@@ -204,6 +241,7 @@ class importableinstance extends instance {
 
         $courseimport = $importrecord->get_courseimport();
         $moduleimport = $importrecord->get_moduleimport();
+        $options = $importrecord->get_options();
 
         $course = create_course($courseimport);
         $moduleimport->course = $course->id;
@@ -230,9 +268,15 @@ class importableinstance extends instance {
             $messages[] = 'Course Property: tags created.';
         }
 
-        if (self::set_course_thumbnail($newinstance, $courseimport->thumbnail)) {
-            $messages[] = 'Course: thumbnail created.';
-        };
+        if ($options->downloadthumbnail) {
+            if (self::set_course_thumbnail($newinstance, $courseimport->thumbnail)) {
+                $messages[] = 'Course: thumbnail created.';
+            };
+        } else {
+            if (self::set_course_thumbnail_customfield($newinstance, $courseimport->thumbnail)) {
+                $messages[] = 'Course custom field: thumbnail created.';
+            };
+        }
 
         $newinstance->clear_messages();
         $newinstance->set_messages($messages);
@@ -256,6 +300,8 @@ class importableinstance extends instance {
         $messages = array();
 
         $courseimport = $importrecord->get_courseimport();
+        $moduleimport = $importrecord->get_moduleimport();
+        $options = $importrecord->get_options();
 
         if ($instance->is_course_visible() != (bool)$courseimport->visible) {
             $messages[] = $courseimport->visible ? 'Course Visibility Updated: visible.' : 'Course Visibility Updated: hidden.';
@@ -291,8 +337,6 @@ class importableinstance extends instance {
             }
         }
 
-        $moduleimport = $importrecord->get_moduleimport();
-
         $moduleupdateneeded = false;
         foreach ($instance->module as $k => $v) {
             if (isset($moduleimport->$k) && !in_array($k, $moduleimport->readonly)) {
@@ -322,9 +366,15 @@ class importableinstance extends instance {
             $messages[] = 'Course: completion criteria updated.';
         };
 
-        if (self::set_course_thumbnail($instance, $courseimport->thumbnail)) {
-            $messages[] = 'Course: thumbnail updated.';
-        };
+        if ($options->downloadthumbnail) {
+            if (self::set_course_thumbnail($instance, $courseimport->thumbnail)) {
+                $messages[] = 'Course: thumbnail updated.';
+            };
+        } else {
+            if (self::set_course_thumbnail_customfield($instance, $courseimport->thumbnail)) {
+                $messages[] = 'Course custom field: thumbnail updated.';
+            };
+        }
 
         $newinstance = self::get_from_cmid($cm->id);
         $newinstance->clear_messages();

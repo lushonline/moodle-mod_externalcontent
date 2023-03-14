@@ -38,6 +38,9 @@ class importrecord {
     /** @var stdClass The module import data */
     protected $moduleimport;
 
+    /** @var stdClass The options for processing the import data */
+    protected $options;
+
     /**
      * Return an empty course import record.
      *
@@ -121,18 +124,38 @@ class importrecord {
     }
 
     /**
+     * Return an empty options import record.
+     *
+     * @return stdClass
+     */
+    private function get_default_options(): \stdClass {
+        $options = new \stdClass();
+        // Downloading of thumbnail.
+        // 1 = Download and add to course.
+        // 0 = Dont download.
+        $options->downloadthumbnail = 1;
+
+        $module->readonly = array();
+
+        return $options;
+    }
+
+    /**
      * importrecord constructor
      *
      * @param object|null $courseimport - object with one or more properties available for courseimport or null.
      * @param object|null $moduleimport - object one or more properties available for moduleimport or null.
+     * @param object|null $options - object one or more properties available for options or null.
      * @return void
      */
-    public function __construct(?object $courseimport = null, ?object $moduleimport = null) {
+    public function __construct(?object $courseimport = null, ?object $moduleimport = null, ?object $options = null) {
         $this->courseimport = self::get_default_courseimport();
         $this->moduleimport = self::get_default_moduleimport();
+        $this->options = self::get_default_options();
 
         self::update_courseimport($courseimport);
         self::update_moduleimport($moduleimport);
+        self::update_options($options);
     }
 
     /**
@@ -239,6 +262,37 @@ class importrecord {
             // Check if passed object has property and it isnt readonly.
             if (isset($updates->$k) && !in_array($k, $this->moduleimport->readonly)) {
                 $this->moduleimport->$k = $updates->$k;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Get the options record.
+     *
+     * @return stdClass|bool - returns the options or false if not valid
+     */
+    public function get_options(): \stdClass {
+        return $this->options;
+    }
+
+    /**
+     * Update the options record, supplied values override current.
+     * Only values not defined as readonly updated.
+     *
+     * @param object|null $updates - the options updates or null.
+     * @return bool
+     */
+    public function update_options(?object $updates): bool {
+        if (is_null($updates)) {
+            return false;
+        }
+
+        // Loop thru all properties of this module import object.
+        foreach ($this->options as $k => $v) {
+            // Check if passed object has property and it isnt readonly.
+            if (isset($updates->$k) && !in_array($k, $this->options->readonly)) {
+                $this->options->$k = $updates->$k;
             }
         }
         return true;
