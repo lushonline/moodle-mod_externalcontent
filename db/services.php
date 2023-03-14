@@ -28,22 +28,22 @@ defined('MOODLE_INTERNAL') || die;
 $functions = array(
 
     'mod_externalcontent_view_externalcontent' => array(
-        'classname'     => 'mod_externalcontent_external',
-        'methodname'    => 'view_externalcontent',
-        'description'   => 'Simulate the view.php web interface externalcontent: trigger events, completion, etc...',
-        'type'          => 'write',
-        'capabilities'  => 'mod/externalcontent:view',
-        'services'      => array(MOODLE_OFFICIAL_MOBILE_SERVICE)
+        'classname' => 'mod_externalcontent_external',
+        'methodname' => 'view_externalcontent',
+        'description' => 'Simulate the view.php web interface externalcontent: trigger events, completion, etc...',
+        'type' => 'write',
+        'capabilities' => 'mod/externalcontent:view',
+        'services' => array(MOODLE_OFFICIAL_MOBILE_SERVICE)
     ),
 
     'mod_externalcontent_get_externalcontents_by_courses' => array(
-        'classname'     => 'mod_externalcontent_external',
-        'methodname'    => 'get_externalcontents_by_courses',
-        'description'   => 'Returns a list of external content in a provided list of courses,
-                            f no list is provided all external content that the user
-                            can view will be returned.',
-        'type'          => 'read',
-        'capabilities'  => 'mod/externalcontent:view',
-        'services'      => array(MOODLE_OFFICIAL_MOBILE_SERVICE),
+        'classname' => 'mod_externalcontent_external',
+        'methodname' => 'get_externalcontents_by_courses',
+        'description' => 'Returns a list of external content in a provided list of courses,
+                          if no list is provided all external content that the user
+                          can view will be returned.',
+        'type' => 'read',
+        'capabilities' => 'mod/externalcontent:view',
+        'services' => array(MOODLE_OFFICIAL_MOBILE_SERVICE),
     ),
 );

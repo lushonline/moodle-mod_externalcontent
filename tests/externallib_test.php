@@ -206,10 +206,10 @@ class externallib_test extends \externallib_advanced_testcase {
         $filerecordinline = array(
             'contextid' => \context_module::instance($externalcontent2->cmid)->id,
             'component' => 'mod_externalcontent',
-            'filearea'  => 'intro',
-            'itemid'    => 0,
-            'filepath'  => '/',
-            'filename'  => $filename,
+            'filearea' => 'intro',
+            'itemid' => 0,
+            'filepath' => '/',
+            'filename' => $filename,
         );
         $fs = get_file_storage();
         $fs->create_file_from_string($filerecordinline, 'image contents (not really)');

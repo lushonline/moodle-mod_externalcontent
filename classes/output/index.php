@@ -58,8 +58,8 @@ class index implements renderable {
      */
     public function get_table(renderer_base $output): html_table {
         // Get strings.
-        $strname         = get_string('name');
-        $strintro        = get_string('moduleintro');
+        $strname = get_string('name');
+        $strintro = get_string('moduleintro');
 
         // Print the list of instances.
         $table = new html_table();
@@ -67,10 +67,10 @@ class index implements renderable {
 
         if ($this->usesections) {
             $strsectionname = get_string('sectionname', 'format_'.$this->course->format);
-            $table->head  = array ($strsectionname, $strname, $strintro);
+            $table->head = array ($strsectionname, $strname, $strintro);
             $table->align = array ('center', 'left', 'left');
         } else {
-            $table->head  = array ($strname, $strintro);
+            $table->head = array ($strname, $strintro);
             $table->align = array ('left', 'left');
         }
 

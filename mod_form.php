@@ -94,7 +94,7 @@ class mod_externalcontent_mod_form extends moodleform_mod {
         if ($this->current->instance) {
             $draftitemid = file_get_submitted_draft_itemid('externalcontent');
             $defaultvalues['externalcontent']['format'] = $defaultvalues['contentformat'];
-            $defaultvalues['externalcontent']['text']   = file_prepare_draft_area($draftitemid, $this->context->id,
+            $defaultvalues['externalcontent']['text'] = file_prepare_draft_area($draftitemid, $this->context->id,
                     'mod_externalcontent', 'content', 0, externalcontent_get_editor_options($this->context),
                     $defaultvalues['content']);
             $defaultvalues['externalcontent']['itemid'] = $draftitemid;

@@ -74,12 +74,12 @@ function externalcontent_add_instance($moduleinstance, $mform = null) {
     $moduleinstance->timemodified = time();
 
     $displayoptions = array();
-    $displayoptions['printintro']   = $moduleinstance->printintro;
+    $displayoptions['printintro'] = $moduleinstance->printintro;
     $displayoptions['printlastmodified'] = $moduleinstance->printlastmodified;
     $moduleinstance->displayoptions = serialize($displayoptions);
 
     if ($mform) {
-        $moduleinstance->content       = $moduleinstance->externalcontent['text'];
+        $moduleinstance->content = $moduleinstance->externalcontent['text'];
         $moduleinstance->contentformat = $moduleinstance->externalcontent['format'];
     }
 
@@ -124,11 +124,11 @@ function externalcontent_update_instance($moduleinstance) {
     $draftitemid = $moduleinstance->externalcontent['itemid'];
 
     $displayoptions = array();
-    $displayoptions['printintro']   = $moduleinstance->printintro;
+    $displayoptions['printintro'] = $moduleinstance->printintro;
     $displayoptions['printlastmodified'] = $moduleinstance->printlastmodified;
     $moduleinstance->displayoptions = serialize($displayoptions);
 
-    $moduleinstance->content       = $moduleinstance->externalcontent['text'];
+    $moduleinstance->content = $moduleinstance->externalcontent['text'];
     $moduleinstance->contentformat = $moduleinstance->externalcontent['format'];
 
     $DB->update_record('externalcontent', $moduleinstance);
@@ -455,7 +455,7 @@ function externalcontent_update_completion_state($course, $cm, $context = null, 
                 $event->trigger();
 
                 $grades = new \stdClass();
-                $grades->userid   = $userid;
+                $grades->userid = $userid;
                 $grades->rawgrade = $score;
 
                 $externalcontent->cmidnumber = $cm->idnumber;
@@ -534,8 +534,8 @@ function externalcontent_get_user_grades($externalcontent, $userid = 0) {
         if ($externalcontentusers) {
             foreach ($externalcontentusers as $externalcontentuser) {
                 $grades[$externalcontentuser->userid] = new stdClass();
-                $grades[$externalcontentuser->userid]->id         = $externalcontentuser->userid;
-                $grades[$externalcontentuser->userid]->userid     = $externalcontentuser->userid;
+                $grades[$externalcontentuser->userid]->id = $externalcontentuser->userid;
+                $grades[$externalcontentuser->userid]->userid = $externalcontentuser->userid;
                 $grades[$externalcontentuser->userid]->rawgrade = externalcontent_grade_user($externalcontent,
                                                                                              $externalcontentuser->userid);
             }
@@ -550,8 +550,8 @@ function externalcontent_get_user_grades($externalcontent, $userid = 0) {
             return false;
         }
         $grades[$userid] = new stdClass();
-        $grades[$userid]->id         = $userid;
-        $grades[$userid]->userid     = $userid;
+        $grades[$userid]->id = $userid;
+        $grades[$userid]->userid = $userid;
         $grades[$userid]->rawgrade = externalcontent_grade_user($externalcontent,
                                                                 $userid);
     }
@@ -617,7 +617,7 @@ function externalcontent_remove_grades($externalcontent, $userid = 0) {
 
     if ($userid) {
         $grade = new stdClass();
-        $grade->userid   = $userid;
+        $grade->userid = $userid;
         $grade->rawgrade = null;
         externalcontent_grade_item_update($externalcontent, $grade);
     }
