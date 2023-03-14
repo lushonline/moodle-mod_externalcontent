@@ -11,11 +11,11 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        moodle-versions: ["MOODLE_311_STABLE", "MOODLE_400_STABLE"]
+        moodle-versions: ["MOODLE_311_STABLE", "MOODLE_400_STABLE", "MOODLE_401_STABLE"]
         database: ["pgsql", "mariadb"]
         operating-system: [ubuntu-latest]
-        php-versions: ["7.3", "7.4", "8.0"]
-        node-versions: ["16.14.0"]
+        php-versions: ["7.4", "8.0"]
+        node-versions: ["16.16.0"]
 
     runs-on: ${{ matrix.operating-system }}
 
@@ -58,7 +58,7 @@ jobs:
           mysql -u 'root' -h '127.0.0.1' -e 'SELECT VERSION();'
 
       - name: Checkout Plugin
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: plugin
 

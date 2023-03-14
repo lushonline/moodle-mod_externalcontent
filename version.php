@@ -18,13 +18,13 @@
  * Plugin version and other meta-data are defined here.
  *
  * @package     mod_externalcontent
- * @copyright   2019-2022 LushOnline
+ * @copyright   2019-2023 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2022092300;
+$plugin->version = 2023031400;
 $plugin->requires = 2021051700; // Requires this Moodle version v3.11 see https://docs.moodle.org/dev/Releases.
 $plugin->component = 'mod_externalcontent';
 $plugin->maturity = MATURITY_STABLE;

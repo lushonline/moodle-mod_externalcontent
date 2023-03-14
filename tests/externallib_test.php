@@ -19,7 +19,7 @@
  *
  * @package     mod_externalcontent
  * @category    external
- * @copyright   2019-2022 LushOnline
+ * @copyright   2019-2023 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 namespace mod_externalcontent;
@@ -35,7 +35,7 @@ require_once($CFG->dirroot.'/webservice/tests/helpers.php');
  *
  * @package     mod_externalcontent
  * @category    external
- * @copyright   2019-2022 LushOnline
+ * @copyright   2019-2023 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers \mod_externalcontent_external
  */
@@ -206,10 +206,10 @@ class externallib_test extends \externallib_advanced_testcase {
         $filerecordinline = array(
             'contextid' => \context_module::instance($externalcontent2->cmid)->id,
             'component' => 'mod_externalcontent',
-            'filearea'  => 'intro',
-            'itemid'    => 0,
-            'filepath'  => '/',
-            'filename'  => $filename,
+            'filearea' => 'intro',
+            'itemid' => 0,
+            'filepath' => '/',
+            'filename' => $filename,
         );
         $fs = get_file_storage();
         $fs->create_file_from_string($filerecordinline, 'image contents (not really)');

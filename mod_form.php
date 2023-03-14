@@ -18,7 +18,7 @@
  * The main mod_externalcontent configuration form.
  *
  * @package     mod_externalcontent
- * @copyright   2019-2022 LushOnline
+ * @copyright   2019-2023 LushOnline
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -31,7 +31,7 @@ require_once($CFG->dirroot.'/mod/externalcontent/locallib.php');
  * Module instance settings form.
  *
  * @package    mod_externalcontent
- * @copyright  2019-2022 LushOnline
+ * @copyright  2019-2023 LushOnline
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_externalcontent_mod_form extends moodleform_mod {
@@ -94,7 +94,7 @@ class mod_externalcontent_mod_form extends moodleform_mod {
         if ($this->current->instance) {
             $draftitemid = file_get_submitted_draft_itemid('externalcontent');
             $defaultvalues['externalcontent']['format'] = $defaultvalues['contentformat'];
-            $defaultvalues['externalcontent']['text']   = file_prepare_draft_area($draftitemid, $this->context->id,
+            $defaultvalues['externalcontent']['text'] = file_prepare_draft_area($draftitemid, $this->context->id,
                     'mod_externalcontent', 'content', 0, externalcontent_get_editor_options($this->context),
                     $defaultvalues['content']);
             $defaultvalues['externalcontent']['itemid'] = $draftitemid;
