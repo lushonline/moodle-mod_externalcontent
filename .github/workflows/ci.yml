@@ -11,14 +11,11 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        moodle-versions: ["MOODLE_311_STABLE", "MOODLE_400_STABLE", "MOODLE_401_STABLE", "MOODLE_402_STABLE"]
+        moodle-versions: ["MOODLE_311_STABLE", "MOODLE_400_STABLE", "MOODLE_401_STABLE"]
         database: ["pgsql", "mariadb"]
         operating-system: [ubuntu-latest]
         php-versions: ["7.4", "8.0"]
         node-versions: ["16.16.0"]
-        exclude:
-          - moodle-versions: "MOODLE_402_STABLE"
-            php-versions: "7.4"
 
     runs-on: ${{ matrix.operating-system }}
 
